@@ -51,23 +51,6 @@ export class Network {
   }
 
   /**
-   * Generate a new mnemonic and use that to create a wallet.
-   *
-   * @param password
-   */
-  public createWallet(
-    password: string,
-  ): { mnemonic: string, wallet: Wallet } {
-    const mnemonic = bip39.generateMnemonic()
-    const wallet = this.fromMnemonic(mnemonic, password)
-
-    return {
-      mnemonic,
-      wallet,
-    }
-  }
-
-  /**
    * Restore a HD-wallet address from mnemonic & password
    *
    * @param mnemonic
@@ -76,7 +59,7 @@ export class Network {
    */
   public fromMnemonic(
     mnemonic: string,
-    password: string,
+    password?: string,
   ): Wallet {
     // if (bip39.validateMnemonic(mnemonic) == false) return false
     const seedHex = bip39.mnemonicToSeedHex(mnemonic, password)

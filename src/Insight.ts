@@ -1,4 +1,4 @@
-import { NetworkNames, INetworkInfo } from "./network"
+import { NetworkNames, INetworkInfo } from "./Network"
 
 import axios, { AxiosInstance } from "axios"
 

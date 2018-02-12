@@ -1,86 +1,8 @@
 import * as qtum from "qtumjs-lib"
 import * as bip39 from "bip39"
 
-import { INetworkInfo } from "./network"
+import { INetworkInfo } from "./Network"
 import { Insight } from "./Insight"
-
-export function generateMnemonic(): string {
-  return bip39.generateMnemonic()
-}
-
-export function makeNewWallet(
-  password: string,
-  network: INetworkInfo,
-): { mnemonic: string, wallet: Wallet } {
-  const mnemonic = bip39.generateMnemonic()
-  const wallet = fromMnemonic(mnemonic, password, network)
-
-  return {
-    mnemonic,
-    wallet,
-  }
-}
-
-/**
- * Restore a HD-wallet address from mnemonic & password
- *
- * @param mnemonic
- * @param password
- * @param network
- */
-export function fromMnemonic(
-  mnemonic: string,
-  password: string,
-  network: INetworkInfo,
-) {
-  // if (bip39.validateMnemonic(mnemonic) == false) return false
-  const seedHex = bip39.mnemonicToSeedHex(mnemonic, password)
-  const hdNode = qtum.HDNode.fromSeedHex(seedHex, network)
-  const account = hdNode.deriveHardened(88).deriveHardened(0).deriveHardened(0)
-  const keyPair = account.keyPair
-  return new Wallet(keyPair, network)
-}
-
-/**
- * Restore 10 wallet addresses exported from QTUM's mobile clients. These
- * wallets are 10 sequential addresses rooted at the HD-wallet path
- * `m/88'/0'/0'` `m/88'/0'/1'` `m/88'/0'/2'`, and so on.
- *
- * @param mnemonic
- * @param network
- */
-export function fromMobile(
-  mnemonic: string,
-  network: INetworkInfo,
-) {
-  const seedHex = bip39.mnemonicToSeedHex(mnemonic)
-  const hdNode = qtum.HDNode.fromSeedHex(seedHex, network)
-  const account = hdNode.deriveHardened(88).deriveHardened(0)
-  const wallets: Wallet[] = []
-  for (let i = 0; i < 10; i++) {
-    const hdnode = account.deriveHardened(i)
-    const wallet = new Wallet(hdnode.keyPair, network)
-
-    wallets.push(wallet)
-  }
-  return wallets
-}
-
-/**
- * Restore wallet from private key specified in WIF format:
- *
- * See: https://en.bitcoin.it/wiki/Wallet_import_format
- *
- * @param wif
- * @param network
- */
-export function fromWIF(
-  wif: string,
-  network: INetworkInfo,
-) {
-  const keyPair = qtum.ECPair.fromWIF(wif, network)
-  return new Wallet(keyPair, network)
-}
 
 export class Wallet {
   public address: string

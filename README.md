@@ -23,7 +23,37 @@ There are some differences from the original web wallet repo.
 * Each wallet instance is instantiated with a network explicitly. This allows simultaneous use of different networks.
 * TypeScript for type hinting.
 
-# Example
+# Examples
+
+## Create Mnemonic+Password Wallet
+
+```js
+import { networks, generateMnemonic } from "../index"
+
+async function main() {
+  const network = networks.testnet
+  const mnemonic = generateMnemonic()
+  const password = "covfefe"
+
+  const wallet = network.fromMnemonic(mnemonic, password)
+
+  console.log("mnemonic:", mnemonic)
+  console.log("public address:", wallet.address)
+  console.log("private key (WIF):", wallet.toWIF())
+}
+
+main().catch((err) => console.log(err))
+```
+
+Example Output:
+
+```
+mnemonic: hold struggle ready lonely august napkin enforce retire pipe where avoid drip
+public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
+private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
+```
+
+## Send Fund
 
 This example restores a wallet from a private key (in [WIF](https://en.bitcoin.it/wiki/Wallet_import_format) format), then sending value to another address.
 
@@ -65,7 +95,7 @@ networks.testnet
 
 ## fromWIF
 
-`fromWIF` restores a wallet from private key (in [WIF](https://en.bitcoin.it/wiki/Wallet_import_format) format).
+`fromWIF` constructs a wallet from private key (in [WIF](https://en.bitcoin.it/wiki/Wallet_import_format) format).
 
 Suppose you want to import the public address `qg3HYD8c4bAVLeEzA9t3Ken3Y3Mni1HZSS`. Use `qtum-cli` to dump the private key from wallet:
 
@@ -76,5 +106,38 @@ cVHzWuEKUxoRKba9ySZFqUKZ9G5W8NkzthRcPaB65amUJs95RM3d
 ```
 
 ```js
-const wallet = network.fromWIF(wif)
+const network = networks.testnet
+
+const privateKey = "cVEwiJ5NMTdnkW4ZW2ykUopawtLPXQWtPDmvpTh5jmXYMtg8itAz"
+
+const wallet = network.fromWIF(privateKey)
+console.log("public address:", wallet.address)
+```
+
+Output:
+
+```
+public address: qWAnfBnRNhZBqtgSdgHjSfS2D5Jawmafra
+```
+
+## fromMnemonic
+
+`fromMnemonic` constructs a wallet from mnemonic. User can optionally specify a `password` to add to the mnemonic entropy.
+
+```ts
+const network = networks.testnet
+const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
+const password = "covfefe"
+
+const wallet = network.fromMnemonic(mnemonic, password)
+
+console.log("public address:", wallet.address)
+console.log("private key (WIF):", wallet.toWIF())
+```
+
+Example Output:
+
+```
+public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
+private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
 ```

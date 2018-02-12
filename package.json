@@ -1,7 +1,7 @@
 {
-  "name": "ts-npm-boilerplate",
+  "name": "qtumjs-wallet",
   "version": "0.0.1",
-  "description": "",
+  "description": "A toolkit for building qtum light wallets",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc -w",
@@ -17,7 +17,11 @@
   "dependencies": {
     "@types/chai": "^4.1.2",
     "@types/mocha": "^2.2.48",
+    "@types/node": "^8.9.1",
+    "axios": "^0.17.1",
+    "bip39": "^2.5.0",
     "chai": "^4.1.2",
-    "mocha": "^5.0.0"
+    "mocha": "^5.0.0",
+    "qtumjs-lib": "^0.0.6"
   }
 }

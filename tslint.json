@@ -16,7 +16,9 @@
       "allow-leading-underscore"
     ],
     "ordered-imports": false,
-    "no-console": false
+    "no-console": false,
+    "no-namespace": false,
+    "no-module": false
   },
   "rulesDirectory": []
 }

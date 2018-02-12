@@ -1,10 +1,10 @@
 import "mocha"
 import { assert } from "chai"
 
-import { hello } from "./index"
+import { } from "./index"
 
 describe("hello", () => {
   it("says hello world", () => {
-    assert.equal(hello(), "hello world")
+    assert.equal(null, "hello world")
   })
 })

@@ -1,4 +1,4 @@
-import { NetworkNames, INetwork } from "./network"
+import { NetworkNames, INetworkInfo } from "./network"
 
 import axios, { AxiosInstance } from "axios"
 
@@ -16,7 +16,7 @@ export class Insight {
   //   return new Insight(TESTNET_API_BASEURL)
   // }
 
-  public static forNetwork(network: INetwork): Insight {
+  public static forNetwork(network: INetworkInfo): Insight {
     const baseURL = INSIGHT_BASEURLS[network.name]
     if (baseURL == null) {
       throw new Error(`No Insight API defined for network: ${network.name}`)

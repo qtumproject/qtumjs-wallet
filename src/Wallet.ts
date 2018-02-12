@@ -1,7 +1,7 @@
 import * as qtum from "qtumjs-lib"
 import * as bip39 from "bip39"
 
-import { INetwork } from "./network"
+import { INetworkInfo } from "./network"
 import { Insight } from "./Insight"
 
 export function generateMnemonic(): string {
@@ -10,7 +10,7 @@ export function generateMnemonic(): string {
 
 export function makeNewWallet(
   password: string,
-  network: INetwork,
+  network: INetworkInfo,
 ): { mnemonic: string, wallet: Wallet } {
   const mnemonic = bip39.generateMnemonic()
   const wallet = fromMnemonic(mnemonic, password, network)
@@ -31,7 +31,7 @@ export function makeNewWallet(
 export function fromMnemonic(
   mnemonic: string,
   password: string,
-  network: INetwork,
+  network: INetworkInfo,
 ) {
   // if (bip39.validateMnemonic(mnemonic) == false) return false
   const seedHex = bip39.mnemonicToSeedHex(mnemonic, password)
@@ -51,7 +51,7 @@ export function fromMnemonic(
  */
 export function fromMobile(
   mnemonic: string,
-  network: INetwork,
+  network: INetworkInfo,
 ) {
   const seedHex = bip39.mnemonicToSeedHex(mnemonic)
   const hdNode = qtum.HDNode.fromSeedHex(seedHex, network)
@@ -76,7 +76,7 @@ export function fromMobile(
  */
 export function fromWIF(
   wif: string,
-  network: INetwork,
+  network: INetworkInfo,
 ) {
   const keyPair = qtum.ECPair.fromWIF(wif, network)
   return new Wallet(keyPair, network)
@@ -88,7 +88,7 @@ export class Wallet {
 
   constructor(
     private keyPair: qtum.ECPair,
-    public network: INetwork,
+    public network: INetworkInfo,
   ) {
     this.address = this.keyPair.getAddress()
     this.insight = Insight.forNetwork(this.network)

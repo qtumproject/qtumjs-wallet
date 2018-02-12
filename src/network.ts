@@ -1,4 +1,4 @@
-export interface INetwork {
+export interface INetworkInfo {
   name: string
 
   messagePrefix: string
@@ -20,7 +20,7 @@ export enum NetworkNames {
   TESTNET = "qtum_testnet",
 }
 
-export const networks: { [key: string]: INetwork } = {
+export const networks: { [key: string]: INetworkInfo } = {
   [NetworkNames.MAINNET]: {
     name: NetworkNames.MAINNET,
     messagePrefix: "\u0018Qtum Signed Message:\n",

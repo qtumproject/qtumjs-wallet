@@ -8,6 +8,12 @@ This library makes it possible to run DApp without the users having to run a ful
 
 > This library is extracted from the official [QTUM web wallet](https://github.com/qtumproject/qtum-web-wallet).
 
+## Install
+
+```
+yarn add qtumjs-wallet
+```
+
 ## Implementation Notes
 
 There are some differences from the original web wallet repo.

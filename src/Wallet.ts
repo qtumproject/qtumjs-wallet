@@ -21,11 +21,7 @@ export class Wallet {
   //   return this.keyPair.toWIF() === tempWallet.keyPair.toWIF()
   // }
 
-  public getAddress(): string {
-    return this.keyPair.getAddress()
-  }
-
-  public getPrivKey(): string {
+  public toWIF(): string {
     return this.keyPair.toWIF()
   }
 

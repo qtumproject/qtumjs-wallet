@@ -52,6 +52,25 @@ export class Insight {
 
     return res.data
   }
+
+  public async contractCall(address: string, encodedData: string): Promise<Insight.IContractCall> {
+    // FIXME wow, what a weird API design... maybe we should just host the RPC
+    // server, with limited API exposed.
+    const res = await this.axios.get(`/contracts/${address}/hash/${encodedData}/call`)
+
+    return res.data
+  }
+
+  /**
+   * Estimate the fee per byte of txdata, in QTUM. Returns -1 if no estimate is
+   * available. It always return -1 for testnet.
+   *
+   * @param nblocks
+   */
+  public async estimateFee(nblocks: number = 6): Promise<any> {
+    const res = await this.axios.get(`/utils/estimatefee?nbBlocks=${nblocks}`)
+    return res.data
+  }
 }
 
 export namespace Insight {
@@ -77,6 +96,29 @@ export namespace Insight {
     isStake: boolean
     height: number
     confirmations: number
+  }
+
+  export interface IExecutionResult {
+    gasUsed: number
+    excepted: string
+    newAddress: string
+    output: string
+    codeDeposit: number
+    gasRefunded: number
+    depositSize: number
+    gasForDeposit: number
+  }
+
+  export interface ITransactionReceipt {
+    stateRoot: string
+    gasUsed: number
+    bloom: string
+    log: any[]
+  }
+
+  export interface IContractCall {
+    address: string
+    executionResult: any
   }
 
   export interface IGetInfo {

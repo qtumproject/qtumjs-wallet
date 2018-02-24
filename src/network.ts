@@ -2,6 +2,7 @@ import * as qtum from "qtumjs-lib"
 import * as bip39 from "bip39"
 
 import { Wallet } from "./Wallet"
+import { Insight } from "./Insight"
 
 export interface INetworkInfo {
   name: string
@@ -106,6 +107,10 @@ export class Network {
   ) {
     const keyPair = qtum.ECPair.fromWIF(wif, this.info)
     return new Wallet(keyPair, this.info)
+  }
+
+  public insight(): Insight {
+    return Insight.forNetwork(this.info)
   }
 }
 

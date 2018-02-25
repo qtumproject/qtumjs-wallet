@@ -28,7 +28,7 @@ There are some differences from the original web wallet repo.
 ## Create Mnemonic+Password Wallet
 
 ```js
-import { networks, generateMnemonic } from "../index"
+import { networks, generateMnemonic } from "qtumjs-wallet"
 
 async function main() {
   const network = networks.testnet

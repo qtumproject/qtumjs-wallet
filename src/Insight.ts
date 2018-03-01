@@ -62,14 +62,36 @@ export class Insight {
   }
 
   /**
-   * Estimate the fee per byte of txdata, in QTUM. Returns -1 if no estimate is
+   * Estimate the fee per KB of txdata, in satoshi. Returns -1 if no estimate is
    * available. It always return -1 for testnet.
    *
    * @param nblocks
    */
   public async estimateFee(nblocks: number = 6): Promise<any> {
     const res = await this.axios.get(`/utils/estimatefee?nbBlocks=${nblocks}`)
-    return res.data
+
+    const feeRate: number = res.data
+    if (typeof feeRate !== "number" || feeRate < 0) {
+      return -1
+    }
+
+    return Math.ceil(feeRate * 1e8)
+  }
+
+  /**
+   * Estimate the fee per byte of txdata, in satoshi. Returns -1 if no estimate is
+   * available. It always return -1 for testnet.
+   *
+   * @param nblocks
+   */
+  public async estimateFeePerByte(nblocks: number = 6): Promise<any> {
+    const feeRate = await this.estimateFee()
+
+    if (feeRate < 0) {
+      return feeRate
+    }
+
+    return Math.ceil(feeRate / 1024)
   }
 }
 

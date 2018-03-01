@@ -4,25 +4,20 @@ import { ECPair } from "bitcoinjs-lib"
 
 import { INetworkInfo } from "./Network"
 import { Insight } from "./Insight"
-import { buildSendToContractTransaction, buildPubKeyHashTransaction, IUTXO } from "./tx"
+import {
+  buildSendToContractTransaction,
+  buildPubKeyHashTransaction,
+  IUTXO,
+  IContractSendTXOptions,
+  ISendTxOptions,
+} from "./tx"
 
-const defaultTxOptions = {
-  gasLimit: 250000,
-  gasPrice: 40, // 40 satoshi
-  // gasPrice: 0.0000004,
-  fee: 0,
-  amount: 0,
-
-  // Wallet uses only one address. Can't really support senderAddress.
-  // senderAddress
-}
-
-export interface ITXOptions {
-  amount?: number
-  gasLimit?: number
-  gasPrice?: number
-  fee?: number
-}
+/**
+ * The default relay fee rate (per byte) if network doesn't cannot estimate how much to use.
+ *
+ * This value will be used for testnet.
+ */
+const defaultTxFeePerByte = Math.ceil(400000 / 1024)
 
 export class Wallet {
   public address: string
@@ -53,48 +48,109 @@ export class Wallet {
     return this.insight.listUTXOs(this.address)
   }
 
-  public async generateTx(to: string, amount: number, fee: number): Promise<string> {
-    const utxos = await this.getBitcoinjsUTXOs()
-    return buildPubKeyHashTransaction(this.keyPair, to, amount, fee, utxos)
+  /**
+   * The network relay fee rate. (satoshi per byte)
+   */
+  public async feeRatePerByte(): Promise<number> {
+    const feeRate = await this.insight.estimateFeePerByte()
+    if (feeRate === -1) {
+      return defaultTxFeePerByte
+    }
+    return feeRate
   }
 
-  public async send(to: string, amount: number, fee: number): Promise<Insight.ISendRawTxResult> {
-    const rawtx = await this.generateTx(to, amount, fee)
+  /**
+   * Generate a payment transaction
+   *
+   * @param to The receiving address
+   * @param amount The amount to transfer (in satoshi)
+   * @param opts
+   */
+  public async generateTx(to: string, amount: number, opts: ISendTxOptions = {}): Promise<string> {
+    const utxos = await this.getBitcoinjsUTXOs()
+
+    const feeRate = Math.ceil(opts.feeRate || await this.feeRatePerByte())
+
+    return buildPubKeyHashTransaction(
+      utxos,
+      this.keyPair,
+      to,
+      amount,
+      feeRate,
+    )
+  }
+
+  /**
+   * Send payment to a receiving address
+   *
+   * @param to The receiving address
+   * @param amount The amount to transfer (in satoshi)
+   * @param opts
+   */
+  public async send(to: string, amount: number, opts: ISendTxOptions = {}): Promise<Insight.ISendRawTxResult> {
+    const rawtx = await this.generateTx(to, amount, opts)
     return this.sendRawTx(rawtx)
   }
 
+  /**
+   * Submit a signed raw transaction to the network.
+   *
+   * @param rawtx Hex encoded raw transaction data.
+   */
   public async sendRawTx(rawtx: string): Promise<Insight.ISendRawTxResult> {
     return this.insight.sendRawTx(rawtx)
   }
 
+  /**
+   * Generate a raw send-to-contract transaction that calls a smart contract.
+   *
+   * @param contractAddress
+   * @param encodedData
+   * @param opts
+   */
   public async generateContractSendTx(
     contractAddress: string,
     encodedData: string,
-    opts: ITXOptions = {}) {
+    opts: IContractSendTXOptions = {}) {
 
     const utxos = await this.getBitcoinjsUTXOs()
 
+    const feeRate = Math.ceil(opts.feeRate || await this.feeRatePerByte())
+
+    // TODO: estimate the precise gasLimit
+
     return buildSendToContractTransaction(
+      utxos,
       this.keyPair,
       contractAddress,
       encodedData,
-      opts.amount || defaultTxOptions.amount,
-      opts.gasLimit || defaultTxOptions.gasLimit,
-      opts.gasPrice || defaultTxOptions.gasPrice,
-      opts.fee || defaultTxOptions.fee,
-      utxos,
+      feeRate,
+      opts,
     )
   }
 
-  public async contractCall(address: string, encodedData: string) {
-    return this.insight.contractCall(address, encodedData)
+  public async contractCall(
+    contractAddress: string,
+    encodedData: string,
+    opts: IContractSendTXOptions = {},
+  ) {
+    return this.insight.contractCall(contractAddress, encodedData)
+  }
+
+  public async contractSend(
+    contractAddress: string,
+    encodedData: string,
+    opts: IContractSendTXOptions = {},
+  ): Promise<Insight.ISendRawTxResult> {
+    const rawTx = await this.generateContractSendTx(contractAddress, encodedData, opts)
+    return this.sendRawTx(rawTx)
   }
 
   /**
    * Massage UTXOs returned by the Insight API to UTXO format accepted by the
    * underlying qtumjs-lib.
    */
-  private async getBitcoinjsUTXOs(): Promise<IUTXO[]> {
+  public async getBitcoinjsUTXOs(): Promise<IUTXO[]> {
     const uxtos = await this.getUTXOs()
     // FIXME: Generating another raw tx before the previous tx had be mined
     // could cause overlapping UXTOs to be used.
@@ -111,9 +167,10 @@ export class Wallet {
     return bitcoinjsUTXOs
   }
 
+  // generateCreateContractTx
   // contractCreate
 
   // TODO
-  // generateCreateContractTx
   // qrc20 lookup
+  // estimateCall
 }

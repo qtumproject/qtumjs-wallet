@@ -1,4 +1,4 @@
-import * as qtum from "qtumjs-lib"
+import { HDNode, ECPair } from "bitcoinjs-lib"
 import * as bip39 from "bip39"
 
 import { Wallet } from "./Wallet"
@@ -64,7 +64,7 @@ export class Network {
   ): Wallet {
     // if (bip39.validateMnemonic(mnemonic) == false) return false
     const seedHex = bip39.mnemonicToSeedHex(mnemonic, password)
-    const hdNode = qtum.HDNode.fromSeedHex(seedHex, this.info)
+    const hdNode = HDNode.fromSeedHex(seedHex, this.info)
     const account = hdNode.deriveHardened(88).deriveHardened(0).deriveHardened(0)
     const keyPair = account.keyPair
     return new Wallet(keyPair, this.info)
@@ -82,7 +82,7 @@ export class Network {
     mnemonic: string,
   ) {
     const seedHex = bip39.mnemonicToSeedHex(mnemonic)
-    const hdNode = qtum.HDNode.fromSeedHex(seedHex, this.info)
+    const hdNode = HDNode.fromSeedHex(seedHex, this.info)
     const account = hdNode.deriveHardened(88).deriveHardened(0)
     const wallets: Wallet[] = []
     for (let i = 0; i < 10; i++) {
@@ -105,7 +105,7 @@ export class Network {
   public fromWIF(
     wif: string,
   ) {
-    const keyPair = qtum.ECPair.fromWIF(wif, this.info)
+    const keyPair = ECPair.fromWIF(wif, this.info)
     return new Wallet(keyPair, this.info)
   }
 

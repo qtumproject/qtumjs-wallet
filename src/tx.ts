@@ -18,9 +18,13 @@ import { OPS } from "./opcodes"
 
 import coinSelect = require("coinselect")
 
+/**
+ * Options for a payment transaction
+ */
 export interface ISendTxOptions {
   /**
-   * Fee rate to pay for the raw transaction data (satoshi per byte).
+   * Fee rate to pay for the raw transaction data (satoshi per byte). The
+   * default value is the query result of the network's fee rate.
    */
   feeRate?: number
 }

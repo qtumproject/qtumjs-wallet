@@ -17,7 +17,7 @@ import {
  *
  * This value will be used for testnet.
  */
-const defaultTxFeePerByte = Math.ceil(400000 / 1024)
+const defaultTxFeePerByte = Math.ceil(0.004 * 1e8 / 1024)
 
 export class Wallet {
   public address: string
@@ -40,7 +40,10 @@ export class Wallet {
     return this.keyPair.toWIF()
   }
 
-  public async getInfo() {
+  /**
+   * Get basic information about the wallet address.
+   */
+  public async getInfo(): Promise<Insight.IGetInfo> {
     return this.insight.getInfo(this.address)
   }
 
@@ -60,13 +63,19 @@ export class Wallet {
   }
 
   /**
-   * Generate a payment transaction
+   * Generate and sign a payment transaction.
    *
    * @param to The receiving address
    * @param amount The amount to transfer (in satoshi)
    * @param opts
+   *
+   * @returns The raw transaction as hexadecimal string
    */
-  public async generateTx(to: string, amount: number, opts: ISendTxOptions = {}): Promise<string> {
+  public async generateTx(
+    to: string,
+    amount: number,
+    opts: ISendTxOptions = {},
+  ): Promise<string> {
     const utxos = await this.getBitcoinjsUTXOs()
 
     const feeRate = Math.ceil(opts.feeRate || await this.feeRatePerByte())
@@ -81,13 +90,20 @@ export class Wallet {
   }
 
   /**
-   * Send payment to a receiving address
+   * Send payment to a receiving address. The transaction is signed locally
+   * using the wallet's private key, and the raw transaction submitted to a
+   * remote API (without revealing the wallet's secret).
    *
    * @param to The receiving address
    * @param amount The amount to transfer (in satoshi)
    * @param opts
+   * @return The raw transaction as hexadecimal string
    */
-  public async send(to: string, amount: number, opts: ISendTxOptions = {}): Promise<Insight.ISendRawTxResult> {
+  public async send(
+    to: string,
+    amount: number,
+    opts: ISendTxOptions = {},
+  ): Promise<Insight.ISendRawTxResult> {
     const rawtx = await this.generateTx(to, amount, opts)
     return this.sendRawTx(rawtx)
   }
@@ -102,7 +118,7 @@ export class Wallet {
   }
 
   /**
-   * Generate a raw send-to-contract transaction that calls a smart contract.
+   * Generate a raw a send-to-contract transaction that invokes a contract's method.
    *
    * @param contractAddress
    * @param encodedData
@@ -111,7 +127,8 @@ export class Wallet {
   public async generateContractSendTx(
     contractAddress: string,
     encodedData: string,
-    opts: IContractSendTXOptions = {}) {
+    opts: IContractSendTXOptions = {},
+  ): Promise<string> {
 
     const utxos = await this.getBitcoinjsUTXOs()
 
@@ -129,14 +146,29 @@ export class Wallet {
     )
   }
 
+  /**
+   * Query a contract's method. It returns the result and logs of a simulated
+   * execution of the contract's code.
+   *
+   * @param contractAddress Address of the contract in hexadecimal
+   * @param encodedData The ABI encoded method call, and parameter values.
+   * @param opts
+   */
   public async contractCall(
     contractAddress: string,
     encodedData: string,
     opts: IContractSendTXOptions = {},
-  ) {
+  ): Promise<Insight.IContractCall> {
     return this.insight.contractCall(contractAddress, encodedData)
   }
 
+  /**
+   * Create a send-to-contract transaction that invokes a contract's method.
+   *
+   * @param contractAddress Address of the contract in hexadecimal
+   * @param encodedData The ABI encoded method call, and parameter values.
+   * @param opts
+   */
   public async contractSend(
     contractAddress: string,
     encodedData: string,

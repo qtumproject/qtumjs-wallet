@@ -41,7 +41,7 @@ export class Insight {
   }
 
   public async getInfo(address: string): Promise<Insight.IGetInfo> {
-    const res = await this.axios.get(`/addr/${address}/utxo`)
+    const res = await this.axios.get(`/addr/${address}`)
     return res.data
   }
 

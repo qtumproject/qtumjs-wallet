@@ -30,6 +30,12 @@ There are some differences from the original web wallet repo.
 * Set tx relay fee automatically from fee rate reported by the network.
 * send-to-contract transaction can transfer value to the contract
 
+# API
+
++ [Networks](#networks)
+  + [fromWIF](#fromwif)
+  + [fromMnemonic](#frommnemonic)
+
 
 # Examples
 
@@ -472,7 +478,7 @@ There are two vouts:
 1. call 0.11. This is the amount we want to send to the contract.
 2. pubkeyhash 80.58700424. This is the amount we going back to the original owner as change.
 
-# async wallet.contractCall
+## async wallet.contractCall
 
 Example:
 

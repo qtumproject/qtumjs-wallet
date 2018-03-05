@@ -103,6 +103,50 @@ async function main() {
 main().catch((err) => console.log(err))
 ```
 
+## Send To Contract
+
+Let's burn some money using the `Burn` contract:
+
+```solidity
+pragma solidity ^0.4.18;
+
+contract Burn {
+  uint256 public totalburned;
+  event DidBurn(address burnerAddress, uint256 burnedAmount);
+
+  function burnbabyburn() public payable {
+    totalburned = msg.value;
+    DidBurn(msg.sender, msg.value);
+  }
+}
+```
+
+The ABI encoding for the `burnbabyburn()` invokation is `e179b912`. We'll burn 0.05 qtum, expressed in unit of satoshi.
+
+```ts
+import { networks } from "qtumjs-wallet"
+
+async function main() {
+  const network = networks.testnet
+
+  const privateKey = "cU4ficvRNvR7jnbtczCWo5s9rB9Tdg1U4LkArVpGU6cKnDq7LFoP"
+
+  const wallet = network.fromWIF(privateKey)
+
+
+  const contractAddress = "b10071ee33512ce8a0c06ecbc14a5f585a27a3e2"
+  const encodedData = "e179b912" // burnbabyburn()
+
+  const tx = await wallet.contractSend(contractAddress, encodedData, {
+    amount: 0.05 * 1e8, // 0.05 qtum in satoshi
+  })
+
+  console.log(tx)
+}
+
+main().catch((err) => console.log(err))
+```
+
 # Networks
 
 Two networks are predefined:

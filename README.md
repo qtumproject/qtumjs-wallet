@@ -491,6 +491,23 @@ There are two vouts:
 
 ## async wallet.contractCall
 
+Query a contract's method. It returns the result and logs of a simulated execution of the contract's code.
+
+Method signature:
+
+```ts
+/**
+ * @param contractAddress Address of the contract in hexadecimal
+ * @param encodedData The ABI encoded method call, and parameter values.
+ * @param opts
+ */
+public async contractCall(
+  contractAddress: string,
+  encodedData: string,
+  opts: IContractSendTXOptions = {},
+): Promise<Insight.IContractCall>
+```
+
 Example:
 
 ```ts

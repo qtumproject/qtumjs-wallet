@@ -110,6 +110,10 @@ networks.mainnet
 networks.testnet
 ```
 
+## fromPrivateKey
+
+Alias for `fromWIF`.
+
 ## fromWIF
 
 `fromWIF` constructs a wallet from private key (in [WIF](https://en.bitcoin.it/wiki/Wallet_import_format) format).

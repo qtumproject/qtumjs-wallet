@@ -80,7 +80,7 @@ export class Network {
    */
   public fromMobile(
     mnemonic: string,
-  ) {
+  ): Wallet[] {
     const seedHex = bip39.mnemonicToSeedHex(mnemonic)
     const hdNode = HDNode.fromSeedHex(seedHex, this.info)
     const account = hdNode.deriveHardened(88).deriveHardened(0)
@@ -100,13 +100,22 @@ export class Network {
    * See: https://en.bitcoin.it/wiki/Wallet_import_format
    *
    * @param wif
-   * @param network
    */
   public fromWIF(
     wif: string,
-  ) {
+  ): Wallet {
     const keyPair = ECPair.fromWIF(wif, this.info)
     return new Wallet(keyPair, this.info)
+  }
+
+  /**
+   * Alias for `fromWIF`
+   * @param wif
+   */
+  public fromPrivateKey(
+    wif: string,
+  ): Wallet {
+    return this.fromWIF(wif)
   }
 
   public insight(): Insight {

@@ -35,6 +35,13 @@ There are some differences from the original web wallet repo.
 + [Networks](#networks)
   + [fromWIF](#fromwif)
   + [fromMnemonic](#frommnemonic)
++ [Wallet](#wallet)
+  + [async wallet.getInfo](#async-walletgetinfo)
+  + [async wallet.send](#async-walletsend)
+  + [async wallet.generateTx](#async-walletgeneratetx)
+  + [async wallet.contractSend](#async-walletcontractsend)
+  + [async wallet.generateContractSendTx](#async-walletgeneratecontractsendtx)
+  + [async wallet.contractCall](#async-walletcontractcall)
 
 
 # Examples

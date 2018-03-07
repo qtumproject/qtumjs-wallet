@@ -29,7 +29,7 @@ export enum NetworkNames {
 export const networksInfo: { [key: string]: INetworkInfo } = {
   [NetworkNames.MAINNET]: {
     name: NetworkNames.MAINNET,
-    messagePrefix: "\u0018Qtum Signed Message:\n",
+    messagePrefix: "\u0015Qtum Signed Message:\n",
     bech32: "bc",
     bip32: { public: 76067358, private: 76066276 },
     pubKeyHash: 58,
@@ -38,7 +38,7 @@ export const networksInfo: { [key: string]: INetworkInfo } = {
   },
   [NetworkNames.TESTNET]: {
     name: NetworkNames.TESTNET,
-    messagePrefix: "\u0018Qtum Signed Message:\n",
+    messagePrefix: "\u0015Qtum Signed Message:\n",
     bech32: "tb",
     bip32: { public: 70617039, private: 70615956 },
     pubKeyHash: 120,

@@ -24,7 +24,7 @@ There are some differences from the original web wallet repo.
 * TypeScript for type hinting.
 * Uses satoshi (1e8) as internal units
   * Can represent up to ~90 million QTUM accurately.
-* Use [coinselect](https://github.com/bitcoinjs/coinselect) to select utxos.
+* Uses [coinselect](https://github.com/bitcoinjs/coinselect) to select utxos.
   * Taking into account the size of a transaction, and multiplies that by fee rate per byte.
   * Uses blackjack algorithm, and fallbacks to simple accumulative.
 * Set tx relay fee automatically from fee rate reported by the network.

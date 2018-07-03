@@ -12,6 +12,8 @@ import {
   ISendTxOptions,
 } from "./tx"
 
+import { IProvider } from "./Provider"
+
 /**
  * The default relay fee rate (per byte) if network doesn't cannot estimate how much to use.
  *
@@ -19,7 +21,7 @@ import {
  */
 const defaultTxFeePerByte = Math.ceil(0.004 * 1e8 / 1024)
 
-export class Wallet {
+export class Wallet implements IProvider<Insight.IContractCall | Insight.ISendRawTxResult> {
   public address: string
   private insight: Insight
 
@@ -31,6 +33,25 @@ export class Wallet {
     this.insight = Insight.forNetwork(this.network)
   }
 
+  public rawCall(
+    method: string,
+    params: any[],
+    opts: any = {}): Promise<Insight.IContractCall | Insight.ISendRawTxResult> {
+      const [contractAddress, encodedData, amount] = params
+      opts = Object.assign({ amount }, opts)
+
+      if (method === "sendToContract") {
+        return this.contractSend(contractAddress, encodedData, opts)
+      } else if (method === "callContract") {
+        return this.contractCall(contractAddress, encodedData, opts)
+      } else {
+        throw new Error("Unknow method call")
+      }
+  }
+
+  public cancelTokenSource() {
+    return
+  }
   // public validateMnemonic(mnemonic, password) {
   //   const tempWallet = Wallet.restoreFromMnemonic(mnemonic, password)
   //   return this.keyPair.toWIF() === tempWallet.keyPair.toWIF()

@@ -20,9 +20,11 @@ async function main() {
 
   // console.log(rawtx)
 
-  const tx = await wallet.contractSend(contractAddress, encodedData, {
-    amount: 0.05 * 1e8,
-  })
+  // const tx = await wallet.contractSend(contractAddress, encodedData, {
+  //   amount: 0.05 * 1e8,
+  // })
+
+  const tx = await wallet.rawCall("sendToContract", [contractAddress, encodedData, 0.01 * 1e8])
 
   console.log(tx)
 }

@@ -2,6 +2,7 @@ import * as bip39 from "bip39"
 
 import { ECPair } from "bitcoinjs-lib"
 
+import axios, { CancelTokenSource } from "axios"
 import { INetworkInfo } from "./Network"
 import { Insight } from "./Insight"
 import {
@@ -49,9 +50,10 @@ export class Wallet implements IProvider<Insight.IContractCall | Insight.ISendRa
       }
   }
 
-  public cancelTokenSource() {
-    return
+  public cancelTokenSource(): CancelTokenSource {
+    return axios.CancelToken.source()
   }
+
   // public validateMnemonic(mnemonic, password) {
   //   const tempWallet = Wallet.restoreFromMnemonic(mnemonic, password)
   //   return this.keyPair.toWIF() === tempWallet.keyPair.toWIF()

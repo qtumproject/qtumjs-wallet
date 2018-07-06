@@ -51,8 +51,8 @@ export class Wallet {
     return this.insight.listUTXOs(this.address)
   }
 
-  public async getTransactions(): Promise<Insight.ITransactionInfo[]> {
-    const info = await this.getInfo()
+  public async getTransactions(info?: Insight.IGetInfo): Promise<Insight.ITransactionInfo[]> {
+    info = info || await this.getInfo()
     const txs = info.transactions.map((id) => this.insight.getTransactionInfo(id))
 
     return Promise.all(txs)

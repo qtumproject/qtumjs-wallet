@@ -94,19 +94,9 @@ export class Insight {
     return Math.ceil(feeRate / 1024)
   }
 
-  public async getTransactionInfo(id: string): Promise<Insight.ITransactionInfo> {
+  public async getTransactionInfo(id: string): Promise<Insight.IRawTransactionInfo> {
     const res = await this.axios.get(`/tx/${id}`)
-    const rawInfo = res.data as Insight.IRawTransactionInfo
-    const { txid, confirmations, time, vin: [{ vout, addr }, ...rest], vout: [{ value }, ...other] } = rawInfo
-
-    return {
-      txid,
-      confirmations,
-      time: new Date(time * 1000),
-      type: vout === 0 ? "in" : "out",
-      address: addr,
-      amount: value,
-    }
+    return res.data as Insight.IRawTransactionInfo
   }
 }
 
@@ -209,12 +199,4 @@ export namespace Insight {
     fees: number // 手续费
   }
 
-  export interface ITransactionInfo {
-    txid: string,
-    type: "in" | "out",
-    address: string,
-    amount: string,
-    confirmations: number,
-    time: Date
-  }
 }

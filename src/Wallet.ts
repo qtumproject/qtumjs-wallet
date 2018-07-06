@@ -1,4 +1,5 @@
 import * as bip38 from "bip38"
+import * as wif from "wif"
 
 import { ECPair } from "bitcoinjs-lib"
 
@@ -51,7 +52,7 @@ export class Wallet {
     return this.insight.listUTXOs(this.address)
   }
 
-  public async getTransactions(info?: Insight.IGetInfo): Promise<Insight.ITransactionInfo[]> {
+  public async getTransactions(info?: Insight.IGetInfo): Promise<Insight.IRawTransactionInfo[]> {
     info = info || await this.getInfo()
     const txs = info.transactions.map((id) => this.insight.getTransactionInfo(id))
 
@@ -59,7 +60,7 @@ export class Wallet {
   }
 
   public toEncryptedPrivateKey(passphrase: string = ""): string {
-    const { privateKey, compressed } = require("wif").decode(this.toWIF())
+    const { privateKey, compressed } = wif.decode(this.toWIF())
     return bip38.encrypt(privateKey, compressed, passphrase)
   }
 

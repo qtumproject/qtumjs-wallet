@@ -51,6 +51,13 @@ export class Wallet {
     return this.insight.listUTXOs(this.address)
   }
 
+  public async getTransactions(): Promise<Insight.ITransactionInfo[]> {
+    const info = await this.getInfo()
+    const txs = info.transactions.map((id) => this.insight.getTransactionInfo(id))
+
+    return Promise.all(txs)
+  }
+
   /**
    * The network relay fee rate. (satoshi per byte)
    */

@@ -9,8 +9,8 @@ async function main() {
 
   console.log("wallet address:", wallet.address)
 
-  const toAddress = "qZaTYNEimGLuqnBDpP3KvBKsFs3DbCuwnr"
-  const amount = 0.15 * 1e8
+  const toAddress = "qJ4dbsuuASNkMTBReZ1hf4MLjfJAAiaiaM"
+  const amount = 3 * 1e8
 
   const rawtx = await wallet.generateTx(toAddress, amount)
   console.log(rawtx)

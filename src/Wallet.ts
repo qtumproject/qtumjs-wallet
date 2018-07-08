@@ -54,9 +54,13 @@ export class Wallet {
 
   public async getTransactions(info?: Insight.IGetInfo): Promise<Insight.IRawTransactionInfo[]> {
     info = info || await this.getInfo()
-    const txs = info.transactions.map((id) => this.insight.getTransactionInfo(id))
+    const txs = info.transactions.map((id) => this.getTransactionInfo(id))
 
     return Promise.all(txs)
+  }
+
+  public async getTransactionInfo(id: string): Promise<Insight.IRawTransactionInfo> {
+    return this.insight.getTransactionInfo(id)
   }
 
   public toEncryptedPrivateKey(passphrase: string = ""): string {

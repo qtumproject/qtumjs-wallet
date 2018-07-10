@@ -5,6 +5,7 @@ import * as wifEncoder from "wif"
 
 import { Wallet } from "./Wallet"
 import { Insight } from "./Insight"
+import scryptParams from "./scryptParams"
 
 export interface INetworkInfo {
   name: string
@@ -76,7 +77,7 @@ export class Network {
     encrypted: string,
     passhprase: string = "",
   ): Wallet {
-    const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase)
+    const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase, undefined, scryptParams)
     const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
 
     return this.fromWIF(decoded)

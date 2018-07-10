@@ -73,16 +73,6 @@ export class Network {
     return new Wallet(keyPair, this.info)
   }
 
-  public fromEncryptedPrivateKey(
-    encrypted: string,
-    passhprase: string = "",
-  ): Wallet {
-    const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase, undefined, scryptParams)
-    const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
-
-    return this.fromWIF(decoded)
-  }
-
   /**
    * constructs a wallet from bip38 encrypted private key
    * @param encrypted private key string

@@ -35,6 +35,7 @@ There are some differences from the original web wallet repo.
 + [Networks](#networks)
   + [fromWIF](#fromwif)
   + [fromMnemonic](#frommnemonic)
+  + [fromEncryptedPrivateKey](#fromencryptedprivatekey)
 + [Wallet](#wallet)
   + [async wallet.getInfo](#async-walletgetinfo)
   + [async wallet.send](#async-walletsend)
@@ -42,6 +43,8 @@ There are some differences from the original web wallet repo.
   + [async wallet.contractSend](#async-walletcontractsend)
   + [async wallet.generateContractSendTx](#async-walletgeneratecontractsendtx)
   + [async wallet.contractCall](#async-walletcontractcall)
+  + [async getTransactions](#async-gettransactions)
+  + [toEncryptedPrivateKey](#toencryptedprivatekey)
 
 
 # Examples
@@ -596,4 +599,137 @@ Output:
     ]
   }
 }
+```
+
+## getTransactions
+
+Get transactions about the wallet address.
+
+Method signature:
+
+```ts
+/**
+ * get transactions by wallet address
+ * @param pageNum page number
+ */
+public async getTransactions(pageNum?: number): Promise<Insight.IRawTransactions>
+```
+
+Example:
+
+```ts
+const network = networks.testnet
+
+const insight = network.insight()
+
+const info = await insight.getTransactionInfo("f20914f3d810010c0a74df60abb3fcf0d3ff2669d944ce187f079ec9faec563e")
+console.log(info)
+```
+
+Example output:
+
+```ts
+wallet address: qbkJZTKQfcout2joWVmnvUrJUDTg93bhdv
+
+{ 
+  pagesTotal: 4,
+  txs: [
+    {
+      txid: 'f20914f3d810010c0a74df60abb3fcf0d3ff2669d944ce187f079ec9faec563e',
+      version: 1,
+      locktime: 0,
+      isqrc20Transfer: false,
+      vin: [Array],
+      vout: [Array],
+      blockhash: 'b993b80423233c4371c316e8d2eec6e0ea191efeb518fa3289f8ebce5cec8ab1',
+      blockheight: 171321,
+      confirmations: 2644,
+      time: 1530852864,
+      blocktime: 1530852864,
+      valueOut: 19.991,
+      size: 225,
+      valueIn: 20,
+      fees: 0.009 
+    },
+    // ...
+  ]
+}
+```
+
+## toEncryptedPrivateKey
+
+encrypted wip using bip38.
+
+Method signature:
+
+```ts
+/**
+ * bip38 encrypted wip
+ * @param passphrase
+ */
+public toEncryptedPrivateKey(passphrase: string = ""): string
+```
+
+Example:
+
+```ts
+const network = networks.testnet
+const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
+const password = "covfefe"
+
+const wallet = network.fromMnemonic(mnemonic, password)
+
+console.log("public address:", wallet.address)
+console.log("private key (WIF):", wallet.toWIF())
+console.log("encrypted bip38 private key is:", wallet.toEncryptedPrivateKey(password))
+```
+
+Example output:
+
+```ts
+public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
+private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
+encrypted bip38 private key is: 6PYVKJXXQdWDyWuEbKfAhbArk41kLUk18jbYRANUhShKFfxhjLh6vh9G52
+```
+
+## fromEncryptedPrivateKey
+
+`fromEncryptedPrivateKey` constructs a wallet from bip38 encrypted private key.
+
+Method signature:
+
+```ts
+ /**
+ * constructs a wallet from bip38 encrypted private key
+ * @param encrypted private key string
+ * @param passhprase password
+ */
+public fromEncryptedPrivateKey(
+  encrypted: string,
+  passhprase: string = "",
+): Wallet
+```
+
+Example:
+
+```ts
+const network = networks.testnet
+const encrypted = "6PYVKJXXQdWDyWuEbKfAhbArk41kLUk18jbYRANUhShKFfxhjLh6vh9G52"
+const password = "covfefe"
+
+const startAt = new Date().getTime()
+const wallet = network.fromEncryptedPrivateKey(encrypted, password)
+const endAt = new Date().getTime()
+
+console.log("public address:", wallet.address)
+console.log("private key (WIF):", wallet.toWIF())
+console.log(`decryption takes ${(endAt - startAt) / 1000} seconds`)
+```
+
+Example output:
+
+```ts
+public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
+private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
+decryption takes 4.35 seconds
 ```

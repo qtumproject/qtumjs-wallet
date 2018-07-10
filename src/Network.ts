@@ -73,6 +73,11 @@ export class Network {
     return new Wallet(keyPair, this.info)
   }
 
+  /**
+   * constructs a wallet from bip38 encrypted private key
+   * @param encrypted private key string
+   * @param passhprase password
+   */
   public fromEncryptedPrivateKey(
     encrypted: string,
     passhprase: string = "",

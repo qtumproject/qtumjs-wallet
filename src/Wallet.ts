@@ -53,6 +53,19 @@ export class Wallet {
     return this.insight.listUTXOs(this.address)
   }
 
+  public async getTransactions(pageNum?: number): Promise<Insight.IRawTransactions> {
+    return this.insight.getTransactions(this.address, pageNum)
+  }
+
+  public async getTransactionInfo(id: string): Promise<Insight.IRawTransactionInfo> {
+    return this.insight.getTransactionInfo(id)
+  }
+
+  public toEncryptedPrivateKey(passphrase: string = ""): string {
+    const { privateKey, compressed } = wif.decode(this.toWIF())
+    return bip38.encrypt(privateKey, compressed, passphrase, undefined, scryptParams)
+  }
+
   /**
    * get transactions by wallet address
    * @param pageNum page number

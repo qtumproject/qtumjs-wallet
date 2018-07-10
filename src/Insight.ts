@@ -94,10 +94,25 @@ export class Insight {
     return Math.ceil(feeRate / 1024)
   }
 
+  /**
+   * Get single transaction's info
+   * @param id
+   */
   public async getTransactionInfo(id: string): Promise<Insight.IRawTransactionInfo> {
     const res = await this.axios.get(`/tx/${id}`)
     return res.data as Insight.IRawTransactionInfo
   }
+
+  /**
+   * Get multiple Transaction info (paginated)
+   * @param address
+   * @param pageNum
+   */
+  public async getTransactions(address: string, pageNum: number = 0): Promise<Insight.IRawTransactions> {
+    const result = await this.axios.get(`/txs/`, { params: { address, pageNum } })
+    return result.data as Insight.IRawTransactions
+  }
+
 }
 
 export namespace Insight {
@@ -180,23 +195,32 @@ export namespace Insight {
 
   export interface IVin {
     txid: string,
-    vout: number, // 0: 转入；1: 转出
     addr: string // 执行转出的钱包地址
   }
 
   export interface IVout {
-    value: string
+    value: string,
+    scriptPubKey: IScriptPubKey,
+  }
+
+  export interface IScriptPubKey {
+    addresses: string[]
   }
 
   export interface IRawTransactionInfo {
     txid: string,
-    vin: IVin[], // [交易, ...]
-    vout: IVout[], // [交易, 余额]
+    vin: IVin[], // 入账，[交易, ...]
+    vout: IVout[], // 出账，[交易, ...]
     confirmations: number,
     time: number,
     valueOut: number, // 扣除手续费的余额（发送方）
     valueIn: number, // 交易前余额（发送方）
     fees: number // 手续费
+  }
+
+  export interface IRawTransactions {
+    pagesTotal: number,
+    txs: IRawTransactionInfo[],
   }
 
 }

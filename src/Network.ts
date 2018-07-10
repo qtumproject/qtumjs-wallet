@@ -1,7 +1,7 @@
 import { HDNode, ECPair } from "bitcoinjs-lib"
 import * as bip39 from "bip39"
 import * as bip38 from "bip38"
-import * as wif from "wif"
+import * as wifEncoder from "wif"
 
 import { Wallet } from "./Wallet"
 import { Insight } from "./Insight"
@@ -77,7 +77,7 @@ export class Network {
     passhprase: string = "",
   ): Wallet {
     const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase)
-    const decoded = wif.encode(this.info.wif, privateKey, compressed)
+    const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
 
     return this.fromWIF(decoded)
   }

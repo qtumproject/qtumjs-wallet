@@ -52,11 +52,8 @@ export class Wallet {
     return this.insight.listUTXOs(this.address)
   }
 
-  public async getTransactions(info?: Insight.IGetInfo): Promise<Insight.IRawTransactionInfo[]> {
-    info = info || await this.getInfo()
-    const txs = info.transactions.map((id) => this.getTransactionInfo(id))
-
-    return Promise.all(txs)
+  public async getTransactions(pageNum?: number): Promise<Insight.IRawTransactions> {
+    return this.insight.getTransactions(this.address, pageNum)
   }
 
   public async getTransactionInfo(id: string): Promise<Insight.IRawTransactionInfo> {

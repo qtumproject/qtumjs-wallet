@@ -67,6 +67,27 @@ export class Wallet {
   }
 
   /**
+   * get transactions by wallet address
+   * @param pageNum page number
+   */
+  public async getTransactions(pageNum?: number): Promise<Insight.IRawTransactions> {
+    return this.insight.getTransactions(this.address, pageNum)
+  }
+
+  public async getTransactionInfo(id: string): Promise<Insight.IRawTransactionInfo> {
+    return this.insight.getTransactionInfo(id)
+  }
+
+  /**
+   * bip38 encrypted wip
+   * @param passphrase
+   */
+  public toEncryptedPrivateKey(passphrase: string = ""): string {
+    const { privateKey, compressed } = wif.decode(this.toWIF())
+    return bip38.encrypt(privateKey, compressed, passphrase, undefined, scryptParams)
+  }
+
+  /**
    * The network relay fee rate. (satoshi per byte)
    */
   public async feeRatePerByte(): Promise<number> {

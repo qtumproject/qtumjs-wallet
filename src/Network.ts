@@ -84,6 +84,21 @@ export class Network {
   }
 
   /**
+   * constructs a wallet from bip38 encrypted private key
+   * @param encrypted private key string
+   * @param passhprase password
+   */
+  public fromEncryptedPrivateKey(
+    encrypted: string,
+    passhprase: string = "",
+  ): Wallet {
+    const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase, undefined, scryptParams)
+    const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
+
+    return this.fromWIF(decoded)
+  }
+
+  /**
    * Restore 10 wallet addresses exported from QTUM's mobile clients. These
    * wallets are 10 sequential addresses rooted at the HD-wallet path
    * `m/88'/0'/0'` `m/88'/0'/1'` `m/88'/0'/2'`, and so on.

@@ -164,7 +164,7 @@ export namespace Insight {
   }
 
   export interface IGetInfo {
-    addStr: string
+    addrStr: string
 
     /**
      * balance of address in qtum

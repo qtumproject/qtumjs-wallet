@@ -1,4 +1,5 @@
 import { networks } from "../index"
+import { WalletRPCProvider } from "../WalletRPCProvider"
 
 async function main() {
   const network = networks.testnet
@@ -24,7 +25,9 @@ async function main() {
   //   amount: 0.05 * 1e8,
   // })
 
-  const tx = await wallet.rawCall("sendToContract", [contractAddress, encodedData, 0.01 * 1e8])
+  const provider = new WalletRPCProvider(wallet)
+
+  const tx = await provider.rawCall("sendToContract", [contractAddress, encodedData, 0.01 * 1e8])
 
   console.log(tx)
 }
@@ -34,5 +37,7 @@ main().catch((err) => console.log(err))
 /*
 OUTPUT:
 
-public address: qWAnfBnRNhZBqtgSdgHjSfS2D5Jawmafra
+wallet address: qbkJZTKQfcout2joWVmnvUrJUDTg93bhdv
+{ txid: 'dcdb139869f2cc6f5e0ccd0b7afa4cd3f30c6a63a80c1357d4176c03ec2c9da4' }
+
 */

@@ -22,7 +22,7 @@ import { IProvider } from "./Provider"
  */
 const defaultTxFeePerByte = Math.ceil(0.004 * 1e8 / 1024)
 
-export class Wallet implements IProvider {
+export class Wallet {
   public address: string
   private insight: Insight
 
@@ -32,26 +32,6 @@ export class Wallet implements IProvider {
   ) {
     this.address = this.keyPair.getAddress()
     this.insight = Insight.forNetwork(this.network)
-  }
-
-  public rawCall(
-    method: string,
-    params: any[],
-    opts: any = {}): Promise<Insight.IContractCall | Insight.ISendRawTxResult> {
-      const [contractAddress, encodedData, amount] = params
-      opts = Object.assign({ amount }, opts)
-
-      if (method === "sendToContract") {
-        return this.contractSend(contractAddress, encodedData, opts)
-      } else if (method === "callContract") {
-        return this.contractCall(contractAddress, encodedData, opts)
-      } else {
-        throw new Error("Unknow method call")
-      }
-  }
-
-  public cancelTokenSource(): CancelTokenSource {
-    return axios.CancelToken.source()
   }
 
   // public validateMnemonic(mnemonic, password) {

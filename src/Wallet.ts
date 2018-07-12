@@ -22,7 +22,7 @@ import { IProvider } from "./Provider"
  */
 const defaultTxFeePerByte = Math.ceil(0.004 * 1e8 / 1024)
 
-export class Wallet implements IProvider<Insight.IContractCall | Insight.ISendRawTxResult> {
+export class Wallet implements IProvider {
   public address: string
   private insight: Insight
 

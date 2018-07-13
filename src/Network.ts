@@ -6,6 +6,7 @@ import * as wifEncoder from "wif"
 import { Wallet } from "./Wallet"
 import { Insight } from "./Insight"
 import scryptParams from "./scryptParams"
+import { fail } from "assert";
 
 export interface INetworkInfo {
   name: string
@@ -64,13 +65,22 @@ export class Network {
   public fromMnemonic(
     mnemonic: string,
     password?: string,
-  ): Wallet {
-    // if (bip39.validateMnemonic(mnemonic) == false) return false
-    const seedHex = bip39.mnemonicToSeedHex(mnemonic, password)
-    const hdNode = HDNode.fromSeedHex(seedHex, this.info)
-    const account = hdNode.deriveHardened(88).deriveHardened(0).deriveHardened(0)
-    const keyPair = account.keyPair
-    return new Wallet(keyPair, this.info)
+  ): Promise<Wallet> {
+    return new Promise((success, failure) => {
+      setImmediate(() => {
+        try {
+          // if (bip39.validateMnemonic(mnemonic) == false) return false
+          const seedHex = bip39.mnemonicToSeedHex(mnemonic, password)
+          const hdNode = HDNode.fromSeedHex(seedHex, this.info)
+          const account = hdNode.deriveHardened(88).deriveHardened(0).deriveHardened(0)
+          const keyPair = account.keyPair
+
+          success(new Wallet(keyPair, this.info))
+        } catch (e) {
+          failure(e)
+        }
+      })
+    })
   }
 
   /**
@@ -81,11 +91,19 @@ export class Network {
   public fromEncryptedPrivateKey(
     encrypted: string,
     passhprase: string = "",
-  ): Wallet {
-    const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase, undefined, scryptParams)
-    const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
+  ): Promise<Wallet> {
+    return new Promise((success, failure) => {
+      setImmediate(() => {
+        try {
+          const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase, undefined, scryptParams)
+          const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
 
-    return this.fromWIF(decoded)
+          success(this.fromWIF(decoded))
+        } catch (e) {
+          failure(e)
+        }
+      })
+    })
   }
 
   /**
@@ -121,9 +139,17 @@ export class Network {
    */
   public fromWIF(
     wif: string,
-  ): Wallet {
-    const keyPair = ECPair.fromWIF(wif, this.info)
-    return new Wallet(keyPair, this.info)
+  ): Promise<Wallet> {
+    return new Promise((success, failure) => {
+      setImmediate(() => {
+        try {
+          const keyPair = ECPair.fromWIF(wif, this.info)
+          success(new Wallet(keyPair, this.info))
+        } catch (e) {
+          failure(e)
+        }
+      })
+    })
   }
 
   /**
@@ -132,7 +158,7 @@ export class Network {
    */
   public fromPrivateKey(
     wif: string,
-  ): Wallet {
+  ): Promise<Wallet> {
     return this.fromWIF(wif)
   }
 

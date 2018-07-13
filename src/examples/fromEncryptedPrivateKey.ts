@@ -2,11 +2,11 @@ import { networks } from "../index"
 
 async function main() {
   const network = networks.testnet
-  const encrypted = "6PYVKJXXQdWDyWuEbKfAhbArk41kLUk18jbYRANUhShKFfxhjLh6vh9G52"
+  const encrypted = "6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM"
   const password = "covfefe"
 
   const startAt = new Date().getTime()
-  const wallet = network.fromEncryptedPrivateKey(encrypted, password)
+  const wallet = await network.fromEncryptedPrivateKey(encrypted, password)
   const endAt = new Date().getTime()
 
   console.log("public address:", wallet.address)
@@ -21,5 +21,5 @@ Output Example:
 
 public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
 private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
-decryption takes 4.35 seconds
+decryption takes 2.143 seconds
  */

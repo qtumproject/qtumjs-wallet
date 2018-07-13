@@ -13,6 +13,7 @@ import {
   ISendTxOptions,
 } from "./tx"
 import scryptParams from "./scryptParams"
+import { resolve } from "url";
 
 /**
  * The default relay fee rate (per byte) if network doesn't cannot estimate how much to use.
@@ -69,9 +70,19 @@ export class Wallet {
    * bip38 encrypted wip
    * @param passphrase
    */
-  public toEncryptedPrivateKey(passphrase: string = ""): string {
-    const { privateKey, compressed } = wif.decode(this.toWIF())
-    return bip38.encrypt(privateKey, compressed, passphrase, undefined, scryptParams)
+  public toEncryptedPrivateKey(passphrase: string = ""): Promise<string> {
+    return new Promise((success, failure) => {
+      setImmediate(() => {
+        try {
+          const { privateKey, compressed } = wif.decode(this.toWIF())
+          const result = bip38.encrypt(privateKey, compressed, passphrase, undefined, scryptParams)
+
+          success(result)
+        } catch (e) {
+          failure(e)
+        }
+      })
+    })
   }
 
   /**

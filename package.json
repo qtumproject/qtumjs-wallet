@@ -1,6 +1,6 @@
 {
   "name": "qtumjs-wallet",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A toolkit for building qtum light wallets",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,6 +11,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qtumproject/qtumjs-wallet.git"
+  },
   "devDependencies": {
     "@types/chai": "^4.1.2",
     "@types/mocha": "^2.2.48",

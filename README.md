@@ -33,9 +33,9 @@ There are some differences from the original web wallet repo.
 # API
 
 + [Networks](#networks)
-  + [fromWIF](#fromwif)
-  + [fromMnemonic](#frommnemonic)
-  + [fromEncryptedPrivateKey](#fromencryptedprivatekey)
+  + [async fromWIF](#fromwif)
+  + [async fromMnemonic](#frommnemonic)
+  + [async fromEncryptedPrivateKey](#fromencryptedprivatekey)
 + [Wallet](#wallet)
   + [async wallet.getInfo](#async-walletgetinfo)
   + [async wallet.send](#async-walletsend)
@@ -44,7 +44,7 @@ There are some differences from the original web wallet repo.
   + [async wallet.generateContractSendTx](#async-walletgeneratecontractsendtx)
   + [async wallet.contractCall](#async-walletcontractcall)
   + [async getTransactions](#async-gettransactions)
-  + [toEncryptedPrivateKey](#toencryptedprivatekey)
+  + [async toEncryptedPrivateKey](#toencryptedprivatekey)
 
 
 # Examples
@@ -59,7 +59,7 @@ async function main() {
   const mnemonic = generateMnemonic()
   const password = "covfefe"
 
-  const wallet = network.fromMnemonic(mnemonic, password)
+  const wallet = await network.fromMnemonic(mnemonic, password)
 
   console.log("mnemonic:", mnemonic)
   console.log("public address:", wallet.address)
@@ -93,7 +93,7 @@ async function main() {
   const network = networks.testnet
 
   const wif = "cU4ficvRNvR7jnbtczCWo5s9rB9Tdg1U4LkArVpGU6cKnDq7LFoP"
-  const wallet = network.fromWIF(wif)
+  const wallet = await network.fromWIF(wif)
 
   console.log(wallet.address)
 
@@ -134,7 +134,7 @@ async function main() {
 
   const privateKey = "cU4ficvRNvR7jnbtczCWo5s9rB9Tdg1U4LkArVpGU6cKnDq7LFoP"
 
-  const wallet = network.fromWIF(privateKey)
+  const wallet = await network.fromWIF(privateKey)
 
 
   const contractAddress = "b10071ee33512ce8a0c06ecbc14a5f585a27a3e2"
@@ -185,7 +185,7 @@ const network = networks.testnet
 
 const privateKey = "cVEwiJ5NMTdnkW4ZW2ykUopawtLPXQWtPDmvpTh5jmXYMtg8itAz"
 
-const wallet = network.fromWIF(privateKey)
+const wallet = await network.fromWIF(privateKey)
 console.log("public address:", wallet.address)
 ```
 
@@ -204,7 +204,7 @@ const network = networks.testnet
 const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
 const password = "covfefe"
 
-const wallet = network.fromMnemonic(mnemonic, password)
+const wallet = await network.fromMnemonic(mnemonic, password)
 
 console.log("public address:", wallet.address)
 console.log("private key (WIF):", wallet.toWIF())
@@ -667,7 +667,7 @@ Method signature:
  * bip38 encrypted wip
  * @param passphrase
  */
-public toEncryptedPrivateKey(passphrase: string = ""): string
+public toEncryptedPrivateKey(passphrase: string = ""): Promise<string>
 ```
 
 Example:
@@ -677,11 +677,11 @@ const network = networks.testnet
 const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
 const password = "covfefe"
 
-const wallet = network.fromMnemonic(mnemonic, password)
+const wallet = await network.fromMnemonic(mnemonic, password)
 
 console.log("public address:", wallet.address)
 console.log("private key (WIF):", wallet.toWIF())
-console.log("encrypted bip38 private key is:", wallet.toEncryptedPrivateKey(password))
+console.log("encrypted bip38 private key is:", await wallet.toEncryptedPrivateKey(password))
 ```
 
 Example output:
@@ -689,7 +689,8 @@ Example output:
 ```ts
 public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
 private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
-encrypted bip38 private key is: 6PYVKJXXQdWDyWuEbKfAhbArk41kLUk18jbYRANUhShKFfxhjLh6vh9G52
+encrypted bip38 private key is: 6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM
+encryption takes 2.096 seconds
 ```
 
 ## fromEncryptedPrivateKey
@@ -707,18 +708,18 @@ Method signature:
 public fromEncryptedPrivateKey(
   encrypted: string,
   passhprase: string = "",
-): Wallet
+): Promise<Wallet>
 ```
 
 Example:
 
 ```ts
 const network = networks.testnet
-const encrypted = "6PYVKJXXQdWDyWuEbKfAhbArk41kLUk18jbYRANUhShKFfxhjLh6vh9G52"
+const encrypted = "6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM"
 const password = "covfefe"
 
 const startAt = new Date().getTime()
-const wallet = network.fromEncryptedPrivateKey(encrypted, password)
+const wallet = async network.fromEncryptedPrivateKey(encrypted, password)
 const endAt = new Date().getTime()
 
 console.log("public address:", wallet.address)
@@ -731,5 +732,5 @@ Example output:
 ```ts
 public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
 private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
-decryption takes 4.35 seconds
+decryption takes 2.143 seconds
 ```

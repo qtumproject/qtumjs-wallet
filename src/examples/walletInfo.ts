@@ -4,7 +4,7 @@ async function main() {
   const network = networks.testnet
 
   const privateKey = "cQxduP5sUjM6Mwn6wxXhwta5BnU7QmbNfm83Hcfj3fQeiQKCfjBA"
-  const wallet = network.fromWIF(privateKey)
+  const wallet = await network.fromWIF(privateKey)
 
   const info = await wallet.getInfo()
   console.log(info)

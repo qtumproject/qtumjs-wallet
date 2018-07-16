@@ -89,12 +89,17 @@ export class Network {
    */
   public fromEncryptedPrivateKey(
     encrypted: string,
-    passhprase: string = "",
+    passhprase: string,
+    fast: boolean = false,
   ): Promise<Wallet> {
     return new Promise((success, failure) => {
       setImmediate(() => {
         try {
-          const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase, undefined, scryptParams)
+          let args = [encrypted, passhprase, undefined]
+          if (!fast) {
+            args = args.concat(scryptParams)
+          }
+          const { privateKey, compressed } =  bip38.decrypt.apply(bip38, args)
           const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
 
           success(this.fromWIF(decoded))
@@ -103,6 +108,18 @@ export class Network {
         }
       })
     })
+  }
+
+  /**
+   * constructs a wallet from bip38 encrypted private key (with default scrypt parameters)
+   * @param encrypted private key string
+   * @param passhprase password
+   */
+  public fromEncryptedPrivateKeyFast(
+    encrypted: string,
+    passhprase: string,
+  ): Promise<Wallet> {
+    return this.fromEncryptedPrivateKey(encrypted, passhprase, true)
   }
 
   /**

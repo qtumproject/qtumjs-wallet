@@ -89,12 +89,17 @@ export class Network {
    */
   public fromEncryptedPrivateKey(
     encrypted: string,
-    passhprase: string = "",
+    passhprase: string,
+    fast: boolean = false,
   ): Promise<Wallet> {
     return new Promise((success, failure) => {
       setImmediate(() => {
         try {
-          const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase, undefined, scryptParams)
+          let args = [encrypted, passhprase, undefined]
+          if (!fast) {
+            args = args.concat(scryptParams)
+          }
+          const { privateKey, compressed } =  bip38.decrypt.apply(bip38, args)
           const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
 
           success(this.fromWIF(decoded))
@@ -112,20 +117,9 @@ export class Network {
    */
   public fromEncryptedPrivateKeyFast(
     encrypted: string,
-    passhprase: string = "",
+    passhprase: string,
   ): Promise<Wallet> {
-    return new Promise((success, failure) => {
-      setImmediate(() => {
-        try {
-          const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase)
-          const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
-
-          success(this.fromWIF(decoded))
-        } catch (e) {
-          failure(e)
-        }
-      })
-    })
+    return this.fromEncryptedPrivateKey(encrypted, passhprase, true)
   }
 
   /**

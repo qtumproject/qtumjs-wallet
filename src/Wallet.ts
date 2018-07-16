@@ -68,17 +68,17 @@ export class Wallet {
   /**
    * bip38 encrypted wip
    * @param passphrase
+   * @param params scryptParams
    */
-  public toEncryptedPrivateKey(passphrase: string, fast: boolean = false): Promise<string> {
+  public toEncryptedPrivateKey(
+    passphrase: string,
+    params: {N: number, r: number, p: number} = scryptParams,
+  ): Promise<string> {
     return new Promise((success, failure) => {
       setImmediate(() => {
         try {
           const { privateKey, compressed } = wif.decode(this.toWIF())
-          let args = [privateKey, compressed, passphrase, undefined]
-          if (!fast) {
-            args = args.concat(scryptParams)
-          }
-          const result = bip38.encrypt.apply(bip38, args)
+          const result = bip38.encrypt(privateKey, compressed, passphrase, undefined, params)
 
           success(result)
         } catch (e) {
@@ -86,14 +86,6 @@ export class Wallet {
         }
       })
     })
-  }
-
-  /**
-   * bip38 encrypted wip (with default scrypt parameters)
-   * @param passphrase
-   */
-  public toEncryptedPrivateKeyFast(passphrase: string): Promise<string> {
-    return this.toEncryptedPrivateKey(passphrase, true)
   }
 
   /**

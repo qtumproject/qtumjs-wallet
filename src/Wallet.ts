@@ -85,6 +85,25 @@ export class Wallet {
   }
 
   /**
+   * bip38 encrypted wip (with default scrypt parameters)
+   * @param passphrase
+   */
+  public toEncryptedPrivateKeyFast(passphrase: string = ""): Promise<string> {
+    return new Promise((success, failure) => {
+      setImmediate(() => {
+        try {
+          const { privateKey, compressed } = wif.decode(this.toWIF())
+          const result = bip38.encrypt(privateKey, compressed, passphrase)
+
+          success(result)
+        } catch (e) {
+          failure(e)
+        }
+      })
+    })
+  }
+
+  /**
    * The network relay fee rate. (satoshi per byte)
    */
   public async feeRatePerByte(): Promise<number> {

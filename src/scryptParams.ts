@@ -1,5 +1,5 @@
 export default {
-  N: 16384,
+  N: 32768,
   r: 8,
   p: 8,
 }

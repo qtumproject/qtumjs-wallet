@@ -11,7 +11,7 @@ async function main() {
   console.log("private key (WIF):", wallet.toWIF())
 
   const startAt = new Date().getTime()
-  const encrypted = await wallet.toEncryptedPrivateKeyFast(password)
+  const encrypted = await wallet.toEncryptedPrivateKey(password, {N: 8192, r: 8, p: 8})
 
   console.log("encrypted bip38 private key is:", encrypted)
 
@@ -27,6 +27,6 @@ Output Example:
 
 public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
 private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
-encrypted bip38 private key is: 6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM
-encryption takes 2.304 seconds
+encrypted bip38 private key is: 6PYVKJXXQG722hd9FcbpkUamyG2kK3Cb7eXZV5NJSABcayC9wy5RHQNYXc
+encryption takes 1.114 seconds
  */

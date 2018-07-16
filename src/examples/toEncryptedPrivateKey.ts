@@ -27,6 +27,6 @@ Output Example:
 
 public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
 private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
-encrypted bip38 private key is: 6PYVKJXXQdWDyWuEbKfAhbArk41kLUk18jbYRANUhShKFfxhjLh6vh9G52
-encryption takes 4.123 seconds
+encrypted bip38 private key is: 6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM
+encryption takes 2.214 seconds
  */

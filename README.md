@@ -36,7 +36,6 @@ There are some differences from the original web wallet repo.
   + [async fromWIF](#fromwif)
   + [async fromMnemonic](#frommnemonic)
   + [async fromEncryptedPrivateKey](#fromencryptedprivatekey)
-  + [async fromEncryptedPrivateKeyFast](#fromencryptedprivatekeyfast)
 + [Wallet](#wallet)
   + [async wallet.getInfo](#async-walletgetinfo)
   + [async wallet.send](#async-walletsend)
@@ -46,7 +45,6 @@ There are some differences from the original web wallet repo.
   + [async wallet.contractCall](#async-walletcontractcall)
   + [async getTransactions](#async-gettransactions)
   + [async toEncryptedPrivateKey](#toencryptedprivatekey)
-  + [async toEncryptedPrivateKeyFast](#toencryptedprivatekeyfast)
 
 
 # Examples
@@ -668,8 +666,12 @@ Method signature:
 /**
  * bip38 encrypted wip
  * @param passphrase
+ * @param params scryptParams, default: { N: 16384, r: 8, p: 8 }
  */
-public toEncryptedPrivateKey(passphrase: string): Promise<string>
+public toEncryptedPrivateKey(
+  passphrase: string,
+  params: {N: number, r: number, p: number} = scryptParams,
+): Promise<string>
 ```
 
 Example:
@@ -691,54 +693,10 @@ Example output:
 ```ts
 public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
 private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
-encrypted bip38 private key is: 6PYVKJXXQdWDyWuEbKfAhbArk41kLUk18jbYRANUhShKFfxhjLh6vh9G52
-encryption takes 4.123 seconds
-```
-
-## toEncryptedPrivateKeyFast
-
-encrypted wip using bip38. (with default scrypt parameters)
-
-Method signature:
-
-```ts
-/**
- * bip38 encrypted wip
- * @param passphrase
- */
-public toEncryptedPrivateKeyFast(passphrase: string): Promise<string>
-```
-
-Example:
-
-```ts
-const network = networks.testnet
-const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
-const password = "covfefe"
-
-const wallet = await network.fromMnemonic(mnemonic, password)
-
-console.log("public address:", wallet.address)
-console.log("private key (WIF):", wallet.toWIF())
-
-const startAt = new Date().getTime()
-const encrypted = await wallet.toEncryptedPrivateKeyFast(password)
-
-console.log("encrypted bip38 private key is:", encrypted)
-
-const endAt = new Date().getTime()
-
-console.log(`encryption takes ${(endAt - startAt) / 1000} seconds`)
-```
-
-Example output:
-
-```ts
-public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
-private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
 encrypted bip38 private key is: 6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM
-encryption takes 2.304 seconds
+encryption takes 2.214 seconds
 ```
+
 
 ## fromEncryptedPrivateKey
 
@@ -751,10 +709,12 @@ Method signature:
  * constructs a wallet from bip38 encrypted private key
  * @param encrypted private key string
  * @param passhprase password
+ * @param params scryptParams, default: { N: 16384, r: 8, p: 8 }
  */
 public fromEncryptedPrivateKey(
   encrypted: string,
   passhprase: string,
+  params: {N: number, r: number, p: number} = scryptParams,
 ): Promise<Wallet>
 ```
 
@@ -779,51 +739,5 @@ Example output:
 ```ts
 public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
 private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
-decryption takes 4.325 seconds
-```
-
-## fromEncryptedPrivateKeyFast
-
-`fromEncryptedPrivateKeyFast` constructs a wallet from bip38 encrypted private key (with default scrypt parameters).
-
-Method signature:
-
-```ts
- /**
- * constructs a wallet from bip38 encrypted private key
- * @param encrypted private key string
- * @param passhprase password
- */
-public fromEncryptedPrivateKey(
-  encrypted: string,
-  passhprase: string,
-): Promise<Wallet>
-```
-
-Example:
-
-```ts
-try {
-  const network = networks.testnet
-  const encrypted = "6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM"
-  const password = "covfefe"
-
-  const startAt = new Date().getTime()
-  const wallet = await network.fromEncryptedPrivateKeyFast(encrypted, password)
-  const endAt = new Date().getTime()
-
-  console.log("public address:", wallet.address)
-  console.log("private key (WIF):", wallet.toWIF())
-  console.log(`decryption takes ${(endAt - startAt) / 1000} seconds`)
-} catch (e) {
-  console.log(e)
-}
-```
-
-Example output:
-
-```ts
-public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
-private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
-decryption takes 2.122 seconds
+decryption takes 2.258 seconds
 ```

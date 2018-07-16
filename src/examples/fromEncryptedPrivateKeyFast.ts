@@ -1,20 +1,24 @@
 import { networks } from "../index"
 
 async function main() {
-  const network = networks.testnet
-  const encrypted = "6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM"
-  const password = "covfefe"
+  try {
+    const network = networks.testnet
+    const encrypted = "6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM"
+    const password = "covfefe"
 
-  const startAt = new Date().getTime()
-  const wallet = await network.fromEncryptedPrivateKeyFast(encrypted, password)
-  const endAt = new Date().getTime()
+    const startAt = new Date().getTime()
+    const wallet = await network.fromEncryptedPrivateKeyFast(encrypted, password)
+    const endAt = new Date().getTime()
 
-  console.log("public address:", wallet.address)
-  console.log("private key (WIF):", wallet.toWIF())
-  console.log(`decryption takes ${(endAt - startAt) / 1000} seconds`)
+    console.log("public address:", wallet.address)
+    console.log("private key (WIF):", wallet.toWIF())
+    console.log(`decryption takes ${(endAt - startAt) / 1000} seconds`)
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-main().catch((err) => console.log(err))
+main()
 
 /*
 Output Example:

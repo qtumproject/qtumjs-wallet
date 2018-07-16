@@ -13,7 +13,6 @@ import {
   ISendTxOptions,
 } from "./tx"
 import scryptParams from "./scryptParams"
-import { resolve } from "url";
 
 /**
  * The default relay fee rate (per byte) if network doesn't cannot estimate how much to use.

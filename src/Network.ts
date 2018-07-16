@@ -6,7 +6,6 @@ import * as wifEncoder from "wif"
 import { Wallet } from "./Wallet"
 import { Insight } from "./Insight"
 import scryptParams from "./scryptParams"
-import { fail } from "assert";
 
 export interface INetworkInfo {
   name: string

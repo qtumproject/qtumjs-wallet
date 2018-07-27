@@ -71,6 +71,12 @@ export interface IUTXO {
   confirmations: number
 }
 
+function ensureAmountInteger(n: number) {
+  if (!Number.isInteger(n)) {
+    throw new Error(`Expect tx amount to be an integer, got: ${n}`)
+  }
+}
+
 /**
  * Build a pay-to-pubkey-hash transaction
  *
@@ -87,6 +93,8 @@ export function buildPubKeyHashTransaction(
   amount: number,
   feeRate: number,
 ) {
+
+  ensureAmountInteger(amount)
 
   const senderAddress = keyPair.getAddress()
 
@@ -228,6 +236,8 @@ export function buildSendToContractTransaction(
   const gasLimit = opts.gasLimit || defaultContractSendTxOptions.gasLimit
   const gasPrice = opts.gasPrice || defaultContractSendTxOptions.gasPrice
   const amount = opts.amount || defaultContractSendTxOptions.amount
+
+  ensureAmountInteger(amount)
 
   const senderAddress = keyPair.getAddress()
 

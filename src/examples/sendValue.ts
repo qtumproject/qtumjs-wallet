@@ -9,8 +9,13 @@ async function main() {
 
   console.log("wallet address:", wallet.address)
 
+<<<<<<< HEAD
   const toAddress = "qJ4dbsuuASNkMTBReZ1hf4MLjfJAAiaiaM"
   const amount = 3 * 1e8
+=======
+  const toAddress = "qZaTYNEimGLuqnBDpP3KvBKsFs3DbCuwnr"
+  const amount = 15000000 // 0.15 qtum (in sat)
+>>>>>>> ensure that output amount is an integer
 
   const rawtx = await wallet.generateTx(toAddress, amount)
   console.log(rawtx)

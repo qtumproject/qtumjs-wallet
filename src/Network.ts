@@ -1,6 +1,5 @@
 import { HDNode, ECPair } from "bitcoinjs-lib"
 import * as bip39 from "bip39"
-import * as bip38 from "bip38"
 import * as wifEncoder from "wif"
 
 import { Wallet } from "./Wallet"
@@ -91,12 +90,12 @@ export class Network {
   public fromEncryptedPrivateKey(
     encrypted: string,
     passhprase: string,
-    params: {N: number, r: number, p: number} = scryptParams,
+    params: { N: number, r: number, p: number } = scryptParams,
   ): Promise<Wallet> {
     return new Promise((success, failure) => {
       setImmediate(() => {
         try {
-          const { privateKey, compressed } =  bip38.decrypt(encrypted, passhprase, undefined, params)
+          const { privateKey, compressed } = bip38.decrypt(encrypted, passhprase, undefined, params)
           const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
 
           success(this.fromWIF(decoded))

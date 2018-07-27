@@ -45,6 +45,7 @@ There are some differences from the original web wallet repo.
   + [async wallet.contractCall](#async-walletcontractcall)
   + [async getTransactions](#async-gettransactions)
   + [async toEncryptedPrivateKey](#toencryptedprivatekey)
+  + [async deriveChildWallet](#derivechildwallet)
 
 
 # Examples
@@ -631,7 +632,7 @@ Example output:
 ```ts
 wallet address: qbkJZTKQfcout2joWVmnvUrJUDTg93bhdv
 
-{ 
+{
   pagesTotal: 4,
   txs: [
     {
@@ -649,7 +650,7 @@ wallet address: qbkJZTKQfcout2joWVmnvUrJUDTg93bhdv
       valueOut: 19.991,
       size: 225,
       valueIn: 20,
-      fees: 0.009 
+      fees: 0.009
     },
     // ...
   ]
@@ -740,4 +741,24 @@ Example output:
 public address: qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV
 private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
 decryption takes 2.258 seconds
+```
+
+## deriveChildWallet
+
+Use [BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#child-key-derivation-ckd-functions) to derive child wallets from the current wallet's keypair.
+
+Example:
+
+Generate as many child wallets as you need:
+
+```js
+const childWallet0 = wallet.deriveChildWallet(0)
+const childWallet1 = wallet.deriveChildWallet(1)
+```
+
+Or omit the child wallet index (defaults to 0):
+
+```js
+// The default child wallet index is 0
+const childWallet = wallet.deriveChildWallet()
 ```

@@ -1,7 +1,7 @@
 import * as bip38 from "bip38"
 import * as wif from "wif"
 
-import { ECPair } from "bitcoinjs-lib"
+import { ECPair, HDNode } from "bitcoinjs-lib"
 
 import { INetworkInfo } from "./Network"
 import { Insight } from "./Insight"
@@ -26,7 +26,7 @@ export class Wallet {
   private insight: Insight
 
   constructor(
-    private keyPair: ECPair,
+    public keyPair: ECPair,
     public network: INetworkInfo,
   ) {
     this.address = this.keyPair.getAddress()
@@ -72,7 +72,7 @@ export class Wallet {
    */
   public toEncryptedPrivateKey(
     passphrase: string,
-    params: {N: number, r: number, p: number} = scryptParams,
+    params: { N: number, r: number, p: number } = scryptParams,
   ): Promise<string> {
     return new Promise((success, failure) => {
       setImmediate(() => {
@@ -234,6 +234,20 @@ export class Wallet {
     }))
 
     return bitcoinjsUTXOs
+  }
+
+  /**
+   * Return an HDNode from which to derive new addresses
+   */
+  public hdnode(): HDNode {
+    const seed = this.keyPair.getPublicKeyBuffer()
+    const hdnode = HDNode.fromSeedBuffer(seed, this.network)!
+    return hdnode
+  }
+
+  public deriveChildWallet(n = 0): Wallet {
+    const childKeyPair = this.hdnode().deriveHardened(n).keyPair
+    return new Wallet(childKeyPair, this.network)
   }
 
   // generateCreateContractTx

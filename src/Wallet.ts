@@ -237,7 +237,7 @@ export class Wallet {
   }
 
   /**
-   * Return an HDNode from which to derive new addresses
+   * The BIP32 HDNode, which may be used to derive new key pairs
    */
   public hdnode(): HDNode {
     const seed = this.keyPair.getPublicKeyBuffer()
@@ -245,6 +245,10 @@ export class Wallet {
     return hdnode
   }
 
+  /**
+   * Use BIP32 to derive child wallets from the current wallet's keypair.
+   * @param n The index of the child wallet to derive.
+   */
   public deriveChildWallet(n = 0): Wallet {
     const childKeyPair = this.hdnode().deriveHardened(n).keyPair
     return new Wallet(childKeyPair, this.network)

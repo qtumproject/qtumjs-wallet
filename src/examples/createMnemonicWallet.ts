@@ -5,7 +5,7 @@ async function main() {
   const mnemonic = generateMnemonic()
   const password = "covfefe"
 
-  const wallet = await network.fromMnemonic(mnemonic, password)
+  const wallet = network.fromMnemonic(mnemonic, password)
 
   console.log("mnemonic:", mnemonic)
   console.log("public address:", wallet.address)

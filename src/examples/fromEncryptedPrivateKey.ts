@@ -7,7 +7,7 @@ async function main() {
     const password = "covfefe"
 
     const startAt = new Date().getTime()
-    const wallet = await network.fromEncryptedPrivateKey(encrypted, password)
+    const wallet = network.fromEncryptedPrivateKey(encrypted, password)
     const endAt = new Date().getTime()
 
     console.log("public address:", wallet.address)

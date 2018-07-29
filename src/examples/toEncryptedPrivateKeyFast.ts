@@ -11,7 +11,7 @@ async function main() {
   console.log("private key (WIF):", wallet.toWIF())
 
   const startAt = new Date().getTime()
-  const encrypted = await wallet.toEncryptedPrivateKey(password, {N: 8192, r: 8, p: 8})
+  const encrypted = wallet.toEncryptedPrivateKey(password, {N: 8192, r: 8, p: 8})
 
   console.log("encrypted bip38 private key is:", encrypted)
 

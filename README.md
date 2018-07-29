@@ -33,9 +33,9 @@ There are some differences from the original web wallet repo.
 # API
 
 + [Networks](#networks)
-  + [async fromWIF](#fromwif)
-  + [async fromMnemonic](#frommnemonic)
-  + [async fromEncryptedPrivateKey](#fromencryptedprivatekey)
+  + [fromWIF](#fromwif)
+  + [fromMnemonic](#frommnemonic)
+  + [fromEncryptedPrivateKey](#fromencryptedprivatekey)
 + [Wallet](#wallet)
   + [async wallet.getInfo](#async-walletgetinfo)
   + [async wallet.send](#async-walletsend)
@@ -44,8 +44,8 @@ There are some differences from the original web wallet repo.
   + [async wallet.generateContractSendTx](#async-walletgeneratecontractsendtx)
   + [async wallet.contractCall](#async-walletcontractcall)
   + [async getTransactions](#async-gettransactions)
-  + [async toEncryptedPrivateKey](#toencryptedprivatekey)
-  + [async deriveChildWallet](#derivechildwallet)
+  + [toEncryptedPrivateKey](#toencryptedprivatekey)
+  + [deriveChildWallet](#derivechildwallet)
 
 
 # Examples
@@ -60,7 +60,7 @@ async function main() {
   const mnemonic = generateMnemonic()
   const password = "covfefe"
 
-  const wallet = await network.fromMnemonic(mnemonic, password)
+  const wallet = network.fromMnemonic(mnemonic, password)
 
   console.log("mnemonic:", mnemonic)
   console.log("public address:", wallet.address)
@@ -94,7 +94,7 @@ async function main() {
   const network = networks.testnet
 
   const wif = "cU4ficvRNvR7jnbtczCWo5s9rB9Tdg1U4LkArVpGU6cKnDq7LFoP"
-  const wallet = await network.fromWIF(wif)
+  const wallet = network.fromWIF(wif)
 
   console.log(wallet.address)
 
@@ -135,7 +135,7 @@ async function main() {
 
   const privateKey = "cU4ficvRNvR7jnbtczCWo5s9rB9Tdg1U4LkArVpGU6cKnDq7LFoP"
 
-  const wallet = await network.fromWIF(privateKey)
+  const wallet = network.fromWIF(privateKey)
 
 
   const contractAddress = "b10071ee33512ce8a0c06ecbc14a5f585a27a3e2"
@@ -186,7 +186,7 @@ const network = networks.testnet
 
 const privateKey = "cVEwiJ5NMTdnkW4ZW2ykUopawtLPXQWtPDmvpTh5jmXYMtg8itAz"
 
-const wallet = await network.fromWIF(privateKey)
+const wallet = network.fromWIF(privateKey)
 console.log("public address:", wallet.address)
 ```
 
@@ -205,7 +205,7 @@ const network = networks.testnet
 const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
 const password = "covfefe"
 
-const wallet = await network.fromMnemonic(mnemonic, password)
+const wallet = network.fromMnemonic(mnemonic, password)
 
 console.log("public address:", wallet.address)
 console.log("private key (WIF):", wallet.toWIF())
@@ -672,7 +672,7 @@ Method signature:
 public toEncryptedPrivateKey(
   passphrase: string,
   params: {N: number, r: number, p: number} = scryptParams,
-): Promise<string>
+): string
 ```
 
 Example:
@@ -682,11 +682,11 @@ const network = networks.testnet
 const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
 const password = "covfefe"
 
-const wallet = await network.fromMnemonic(mnemonic, password)
+const wallet = network.fromMnemonic(mnemonic, password)
 
 console.log("public address:", wallet.address)
 console.log("private key (WIF):", wallet.toWIF())
-console.log("encrypted bip38 private key is:", await wallet.toEncryptedPrivateKey(password))
+console.log("encrypted bip38 private key is:", wallet.toEncryptedPrivateKey(password))
 ```
 
 Example output:
@@ -716,7 +716,7 @@ public fromEncryptedPrivateKey(
   encrypted: string,
   passhprase: string,
   params: {N: number, r: number, p: number} = scryptParams,
-): Promise<Wallet>
+): Wallet
 ```
 
 Example:
@@ -727,7 +727,7 @@ const encrypted = "6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM"
 const password = "covfefe"
 
 const startAt = new Date().getTime()
-const wallet = async network.fromEncryptedPrivateKey(encrypted, password)
+const wallet = network.fromEncryptedPrivateKey(encrypted, password)
 const endAt = new Date().getTime()
 
 console.log("public address:", wallet.address)

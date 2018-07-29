@@ -5,7 +5,7 @@ async function main() {
   const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
   const password = "covfefe"
 
-  const wallet = await network.fromMnemonic(mnemonic, password)
+  const wallet = network.fromMnemonic(mnemonic, password)
 
   console.log("public address:", wallet.address)
   console.log("private key (WIF):", wallet.toWIF())

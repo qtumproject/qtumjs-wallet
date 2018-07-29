@@ -5,7 +5,7 @@ async function main() {
 
   const privateKey = "cVEwiJ5NMTdnkW4ZW2ykUopawtLPXQWtPDmvpTh5jmXYMtg8itAz"
 
-  const wallet = await network.fromWIF(privateKey)
+  const wallet = network.fromWIF(privateKey)
   console.log("public address:", wallet.address)
 }
 

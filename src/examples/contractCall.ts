@@ -6,7 +6,7 @@ async function main() {
 
   const privateKey = "cQxduP5sUjM6Mwn6wxXhwta5BnU7QmbNfm83Hcfj3fQeiQKCfjBA"
 
-  const wallet = await network.fromWIF(privateKey)
+  const wallet = network.fromWIF(privateKey)
 
   // burnbabyburn
   // e179b912

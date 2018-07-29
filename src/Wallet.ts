@@ -73,19 +73,10 @@ export class Wallet {
   public toEncryptedPrivateKey(
     passphrase: string,
     params: { N: number, r: number, p: number } = scryptParams,
-  ): Promise<string> {
-    return new Promise((success, failure) => {
-      setImmediate(() => {
-        try {
-          const { privateKey, compressed } = wif.decode(this.toWIF())
-          const result = bip38.encrypt(privateKey, compressed, passphrase, undefined, params)
+  ): string {
+    const { privateKey, compressed } = wif.decode(this.toWIF())
 
-          success(result)
-        } catch (e) {
-          failure(e)
-        }
-      })
-    })
+    return bip38.encrypt(privateKey, compressed, passphrase, undefined, params)
   }
 
   /**

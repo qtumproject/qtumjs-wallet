@@ -1,4 +1,5 @@
 import { HDNode, ECPair } from "bitcoinjs-lib"
+import * as bip38 from "bip38"
 import * as bip39 from "bip39"
 import * as wifEncoder from "wif"
 

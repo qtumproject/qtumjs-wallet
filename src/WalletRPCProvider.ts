@@ -11,7 +11,7 @@ export class WalletRPCProvider implements IProvider {
     method: string,
     params: any[] = [],
     opts: any = {}): Promise<Insight.IContractCall | Insight.ISendRawTxResult> {
-      const [contractAddress, encodedData, amount = 0, gasLimit = 200000, gasPrice = 0.0000004] = params
+      const [contractAddress, encodedData, amount = 0, gasLimit = 200000, gasPrice = 40] = params
       opts = Object.assign({ amount, gasLimit, gasPrice }, opts)
 
       switch (method.toLowerCase()) {

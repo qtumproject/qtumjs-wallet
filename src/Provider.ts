@@ -1,6 +1,6 @@
 export interface IProvider {
   rawCall: (
-    method: "sendToContract" | "callContract",
+    method: string,
     params: any[],
     opts?: any) => Promise<any>
 

@@ -14,12 +14,13 @@ export class WalletRPCProvider implements IProvider {
       const [contractAddress, encodedData, amount = 0, gasLimit = 200000, gasPrice = 0.0000004] = params
       opts = Object.assign({ amount, gasLimit, gasPrice }, opts)
 
-      if (method === "sendToContract") {
-        return this.wallet.contractSend(contractAddress, encodedData, opts)
-      } else if (method === "callContract") {
-        return this.wallet.contractCall(contractAddress, encodedData, opts)
-      } else {
-        throw new Error("Unknow method call")
+      switch (method.toLowerCase()) {
+        case "sendtocontract":
+          return this.wallet.contractSend(contractAddress, encodedData, opts)
+        case "callcontract":
+          return this.wallet.contractCall(contractAddress, encodedData, opts)
+        default:
+          throw new Error("Unknow method call")
       }
   }
 

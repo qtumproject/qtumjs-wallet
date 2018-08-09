@@ -1,5 +1,6 @@
 import * as bip38 from "bip38"
 import * as wif from "wif"
+import * as secp256k1 from 'secp256k1'
 
 import { ECPair, HDNode } from "bitcoinjs-lib"
 
@@ -20,6 +21,15 @@ import scryptParams from "./scryptParams"
  * This value will be used for testnet.
  */
 const defaultTxFeePerByte = Math.ceil(0.004 * 1e8 / 1024)
+
+export function validatePrivateKey(privateKey:string): boolean {
+  try {
+    var decoded = wif.decode(privateKey)
+    return secp256k1.privateKeyVerify(decoded.privateKey)  
+  } catch (e) {
+    return false
+  }
+}
 
 export class Wallet {
   public address: string

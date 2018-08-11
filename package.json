@@ -6,6 +6,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc -w",
+    "bundle": "webpack --config webpack.config.js",
     "test": "mocha lib/**/*_test.js"
   },
   "keywords": [],

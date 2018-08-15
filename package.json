@@ -1,6 +1,6 @@
 {
   "name": "qtumjs-wallet",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A toolkit for building qtum light wallets",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

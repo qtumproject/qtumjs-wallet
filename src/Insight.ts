@@ -153,9 +153,16 @@ export namespace Insight {
   }
 
   export interface ITransactionReceipt {
-    stateRoot: string
+    blockHash: string
+    blockNumber: number
+    transactionHash: string
+    transactionIndex: number
+    from: string
+    to: string
+    cumulativeGasUsed: string
     gasUsed: number
-    bloom: string
+    contractAddress: string
+    excepted: string
     log: any[]
   }
 
@@ -195,13 +202,13 @@ export namespace Insight {
   }
 
   export interface IVin {
-    txid: string,
+    txid: string
     addr: string // 执行转出的钱包地址
   }
 
   export interface IVout {
-    value: string,
-    scriptPubKey: IScriptPubKey,
+    value: string
+    scriptPubKey: IScriptPubKey
   }
 
   export interface IScriptPubKey {
@@ -209,14 +216,20 @@ export namespace Insight {
   }
 
   export interface IRawTransactionInfo {
-    txid: string,
-    vin: IVin[], // 入账，[交易, ...]
-    vout: IVout[], // 出账，[交易, ...]
-    confirmations: number,
-    time: number,
-    valueOut: number, // 扣除手续费的余额（发送方）
-    valueIn: number, // 交易前余额（发送方）
+    txid: string
+    version: number,
+    locktime: number,
+    receipt: ITransactionReceipt[],
+    vin: IVin[] // 入账，[交易, ...]
+    vout: IVout[] // 出账，[交易, ...]
+    confirmations: number
+    time: number
+    valueOut: number // 扣除手续费的余额（发送方）
+    valueIn: number // 交易前余额（发送方）
     fees: number // 手续费
+    blockhash: string
+    blockheight: number
+    isqrc20Transfer: boolean
   }
 
   export interface IRawTransactions {

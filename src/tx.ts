@@ -51,6 +51,23 @@ export interface IContractSendTXOptions {
   feeRate?: number
 }
 
+export interface IContractCreateTXOptions {
+  /**
+   * unit: satoshi
+   */
+  gasLimit?: number
+
+  /**
+   * unit: satoshi / gas
+   */
+  gasPrice?: number
+
+  /**
+   * unit: satoshi / kilobyte
+   */
+  feeRate?: number
+}
+
 export interface IUTXO {
   // This structure is slightly different from that returned by Insight API
   address: string
@@ -144,16 +161,12 @@ export function buildCreateContractTransaction(
   keyPair: ECPair,
   code: string,
   feeRate: number,
-  opts: IContractSendTXOptions = {},
+  opts: IContractCreateTXOptions = {},
 ): string {
 
   const gasLimit = opts.gasLimit || defaultContractSendTxOptions.gasLimit
   const gasPrice = opts.gasPrice || defaultContractSendTxOptions.gasPrice
   const gasLimitFee = new BigNumber(gasLimit).times(gasPrice).toNumber()
-
-  if (opts.amount != null) {
-    throw new Error("Cannot send value to a contract when creating it")
-  }
 
   const createContractScript = BTCScript.compile([
     OPS.OP_4,

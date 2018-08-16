@@ -27,6 +27,7 @@ export interface INetworkInfo {
 export enum NetworkNames {
   MAINNET = "qtum",
   TESTNET = "qtum_testnet",
+  REGTEST = "qtum_regtest",
 }
 
 export const networksInfo: { [key: string]: INetworkInfo } = {
@@ -41,6 +42,15 @@ export const networksInfo: { [key: string]: INetworkInfo } = {
   },
   [NetworkNames.TESTNET]: {
     name: NetworkNames.TESTNET,
+    messagePrefix: "\u0015Qtum Signed Message:\n",
+    bech32: "tb",
+    bip32: { public: 70617039, private: 70615956 },
+    pubKeyHash: 120,
+    scriptHash: 110,
+    wif: 239,
+  },
+  [NetworkNames.REGTEST]: {
+    name: NetworkNames.REGTEST,
     messagePrefix: "\u0015Qtum Signed Message:\n",
     bech32: "tb",
     bip32: { public: 70617039, private: 70615956 },
@@ -147,8 +157,10 @@ export class Network {
 
 const mainnet = new Network(networksInfo[NetworkNames.MAINNET])
 const testnet = new Network(networksInfo[NetworkNames.TESTNET])
+const regtest = new Network(networksInfo[NetworkNames.REGTEST])
 
 export const networks = {
   mainnet,
   testnet,
+  regtest,
 }

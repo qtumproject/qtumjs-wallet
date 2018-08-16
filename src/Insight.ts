@@ -5,6 +5,7 @@ import axios, { AxiosInstance } from "axios"
 const INSIGHT_BASEURLS: { [key: string]: string } = {
   [NetworkNames.MAINNET]: "https://explorer.qtum.org/insight-api",
   [NetworkNames.TESTNET]: "https://testnet.qtum.org/insight-api",
+  [NetworkNames.REGTEST]: "http://localhost:3001/insight-api",
 }
 
 export class Insight {

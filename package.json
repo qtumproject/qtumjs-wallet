@@ -5,8 +5,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "insightapi": "docker-compose up -d --build && docker-compose exec insightapi bash -c init-accounts.sh",
     "build": "tsc -w",
     "bundle": "webpack --config webpack.config.js",
+    "clean": "docker-compose stop && docker-compose rm -f && rm -rf ./data && rm -rf lib",
     "test": "mocha lib/**/*_test.js"
   },
   "keywords": [],

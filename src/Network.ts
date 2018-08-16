@@ -6,6 +6,7 @@ import * as wifEncoder from "wif"
 import { Wallet } from "./Wallet"
 import { Insight } from "./Insight"
 import scryptParams from "./scryptParams"
+import { validatePrivateKey } from "./index"
 
 export interface INetworkInfo {
   name: string
@@ -125,6 +126,9 @@ export class Network {
   public fromWIF(
     wif: string,
   ): Wallet {
+    if (!validatePrivateKey(wif)) {
+      throw new Error("wif is invalid, it does not satisfy ECDSA")
+    }
     const keyPair = ECPair.fromWIF(wif, this.info)
 
     return new Wallet(keyPair, this.info)

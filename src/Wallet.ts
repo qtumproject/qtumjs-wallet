@@ -14,13 +14,8 @@ import {
   buildCreateContractTransaction,
   IContractCreateTXOptions,
 } from "./tx"
-import scryptParams from "./scryptParams"
 
-export interface IScryptParams {
-  N: number,
-  r: number,
-  p: number,
-}
+import defaultScrypt, { IScryptParams } from "./scryptParams"
 
 /**
  * The default relay fee rate (per byte) if network doesn't cannot estimate how much to use.
@@ -75,7 +70,7 @@ export class Wallet {
    */
   public toEncryptedPrivateKey(
     passphrase: string,
-    params: IScryptParams = scryptParams,
+    params: IScryptParams = defaultScrypt,
   ): string {
     const { privateKey, compressed } = wif.decode(this.toWIF())
 

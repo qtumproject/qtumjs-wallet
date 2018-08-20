@@ -1,9 +1,9 @@
 import { assert } from "chai"
 
 import { networks, generateMnemonic, NetworkNames } from "./"
-import QtumRPC, { rpcClient, generateBlock } from "./qtumRPC"
+import { generateBlock } from "./qtumRPC"
 import { sleep } from "./time"
-import { IScryptParams } from "./Wallet"
+import { IScryptParams } from "./scryptParams"
 
 describe("Wallet", () => {
   const network = networks.regtest
@@ -63,7 +63,7 @@ describe("Wallet", () => {
     assert.equal(wallet.toWIF(), wifPrivateKey)
   })
 
-  it("gets wallet info", async function() {
+  it("gets wallet info", async function () {
     this.timeout(10000)
 
     const wallet = network.fromWIF(wifPrivateKey)
@@ -81,7 +81,7 @@ describe("Wallet", () => {
     ])
   })
 
-  it("gets wallet transactions", async function() {
+  it("gets wallet transactions", async function () {
     this.timeout(10000)
 
     const wallet = network.fromWIF(wifPrivateKey)
@@ -92,7 +92,7 @@ describe("Wallet", () => {
     assert.isArray(rawTxs.txs)
   })
 
-  it("sends payment to a receiving address", async function() {
+  it("sends payment to a receiving address", async function () {
     this.timeout(20000)
 
     const insight = network.insight()

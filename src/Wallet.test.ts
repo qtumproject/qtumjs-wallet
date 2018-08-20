@@ -1,8 +1,9 @@
 import { assert } from "chai"
 
 import { networks, generateMnemonic, NetworkNames } from "./"
-import QtumRPC, {rpcClient, generateBlock} from "./qtumRPC"
-import {sleep} from "./time"
+import QtumRPC, { rpcClient, generateBlock } from "./qtumRPC"
+import { sleep } from "./time"
+import { IScryptParams } from "./Wallet"
 
 describe("Wallet", () => {
   const network = networks.regtest
@@ -38,25 +39,22 @@ describe("Wallet", () => {
   })
 
   it("recovers wallet from EncryptedPrivateKey", function() {
-    this.timeout(8000)
+    const wif = "cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE"
+    const encryptPassword = "testtest"
 
-    const encrypted = "6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM"
+    const wallet = network.fromWIF(wif)
 
-    const wallet = network.fromEncryptedPrivateKey(encrypted, password)
+    const quickScrypt: IScryptParams = {
+      N: 2,
+      r: 2,
+      p: 1,
+    }
 
-    assert.equal(wallet.address, "qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV")
-    assert.equal(wallet.toWIF(), "cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE")
-  })
+    const encryptedKey = wallet.toEncryptedPrivateKey(encryptPassword, quickScrypt)
 
-  it("recovers wallet from EncryptedPrivateKey fast", function() {
-    this.timeout(20000)
+    const wallet2 = network.fromEncryptedPrivateKey(encryptedKey, encryptPassword, quickScrypt)
 
-    const encrypted = "6PYVKJXXQG722hd9FcbpkUamyG2kK3Cb7eXZV5NJSABcayC9wy5RHQNYXc"
-
-    const wallet = network.fromEncryptedPrivateKey(encrypted, password, {N: 8192, r: 8, p: 8})
-
-    assert.equal(wallet.address, "qLUHmrFGexxpyHwQphLpE1czZNFE5m1xmV")
-    assert.equal(wallet.toWIF(), "cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE")
+    assert.equal(wallet2.toWIF(), wif)
   })
 
   it("dumps wallet to WIF", () => {
@@ -90,7 +88,7 @@ describe("Wallet", () => {
 
     const rawTxs = await wallet.getTransactions()
 
-    assert.containsAllKeys(rawTxs, [ "txs", "pagesTotal" ])
+    assert.containsAllKeys(rawTxs, ["txs", "pagesTotal"])
     assert.isArray(rawTxs.txs)
   })
 

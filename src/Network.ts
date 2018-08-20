@@ -3,7 +3,7 @@ import * as bip38 from "bip38"
 import * as bip39 from "bip39"
 import * as wifEncoder from "wif"
 
-import { Wallet } from "./Wallet"
+import { Wallet, IScryptParams } from "./Wallet"
 import { Insight } from "./Insight"
 import scryptParams from "./scryptParams"
 import { validatePrivateKey } from "./index"
@@ -94,7 +94,7 @@ export class Network {
   public fromEncryptedPrivateKey(
     encrypted: string,
     passhprase: string,
-    params: { N: number, r: number, p: number } = scryptParams,
+    params: IScryptParams = scryptParams,
   ): Wallet {
     const { privateKey, compressed } = bip38.decrypt(encrypted, passhprase, undefined, params)
     const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)

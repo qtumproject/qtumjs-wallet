@@ -1,6 +1,6 @@
 import RpcClient, {IConfig} from "qtumd-rpc"
 
-import {Network, NetworkNames} from "../src/Network"
+import {Network, NetworkNames} from "./Network"
 
 export default class QtumRPC {
   public rpc: RpcClient

@@ -1,7 +1,7 @@
 import { assert } from "chai"
 
-import { Wallet, networks } from "../src"
-import { sleep } from "../src/time"
+import { Wallet, networks } from "./"
+import { sleep } from "./time"
 import { generateBlock } from "./qtumRPC"
 
 describe("Contract", () => {

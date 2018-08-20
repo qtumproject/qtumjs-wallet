@@ -1,8 +1,8 @@
 import { assert } from "chai"
 
-import { networks, generateMnemonic, NetworkNames } from "../src"
+import { networks, generateMnemonic, NetworkNames } from "./"
 import QtumRPC, {rpcClient, generateBlock} from "./qtumRPC"
-import {sleep} from "../src/time"
+import {sleep} from "./time"
 
 describe("Wallet", () => {
   const network = networks.regtest

@@ -1,6 +1,6 @@
 import { assert } from "chai"
 
-import { networks } from "../src"
+import { networks } from "./"
 
 describe("Insight", async function() {
   this.timeout(10000)

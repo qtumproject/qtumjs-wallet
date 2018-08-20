@@ -1,9 +1,9 @@
 import { assert } from "chai"
 
-import { networks, Wallet, WalletRPCProvider } from "../src"
-import { Insight } from "../src/Insight"
+import { networks, Wallet, WalletRPCProvider } from "./"
+import { Insight } from "./Insight"
 import { generateBlock } from "./qtumRPC"
-import { sleep } from "../src/time"
+import { sleep } from "./time"
 
 describe("WalletRPCProvider", async () => {
 

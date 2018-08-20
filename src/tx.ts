@@ -51,6 +51,23 @@ export interface IContractSendTXOptions {
   feeRate?: number
 }
 
+export interface IContractCreateTXOptions {
+  /**
+   * unit: satoshi
+   */
+  gasLimit?: number
+
+  /**
+   * unit: satoshi / gas
+   */
+  gasPrice?: number
+
+  /**
+   * unit: satoshi / kilobyte
+   */
+  feeRate?: number
+}
+
 export interface IUTXO {
   // This structure is slightly different from that returned by Insight API
   address: string
@@ -109,25 +126,25 @@ export function buildPubKeyHashTransaction(
     throw new Error("could not find UTXOs to build transaction")
   }
 
-  const tx = new TransactionBuilder(keyPair.getNetwork())
+  const txb = new TransactionBuilder(keyPair.getNetwork())
 
   let vinSum = new BigNumber(0)
   for (const input of inputs) {
-    tx.addInput(input.hash, input.pos)
+    txb.addInput(input.hash, input.pos)
     vinSum = vinSum.plus(input.value)
   }
 
-  tx.addOutput(to, amount)
+  txb.addOutput(to, amount)
 
   const change = vinSum.minus(txfee).minus(amount).toNumber()
   if (change > 0) {
-    tx.addOutput(senderAddress, change)
+    txb.addOutput(senderAddress, change)
   }
 
   for (let i = 0; i < inputs.length; i++) {
-    tx.sign(i, keyPair)
+    txb.sign(i, keyPair)
   }
-  return tx.build().toHex()
+  return txb.build().toHex()
 }
 
 /**
@@ -144,16 +161,12 @@ export function buildCreateContractTransaction(
   keyPair: ECPair,
   code: string,
   feeRate: number,
-  opts: IContractSendTXOptions = {},
+  opts: IContractCreateTXOptions = {},
 ): string {
 
   const gasLimit = opts.gasLimit || defaultContractSendTxOptions.gasLimit
   const gasPrice = opts.gasPrice || defaultContractSendTxOptions.gasPrice
   const gasLimitFee = new BigNumber(gasLimit).times(gasPrice).toNumber()
-
-  if (opts.amount != null) {
-    throw new Error("Cannot send value to a contract when creating it")
-  }
 
   const createContractScript = BTCScript.compile([
     OPS.OP_4,
@@ -178,28 +191,28 @@ export function buildCreateContractTransaction(
     throw new Error("could not find UTXOs to build transaction")
   }
 
-  const tx = new TransactionBuilder(keyPair.getNetwork())
+  const txb = new TransactionBuilder(keyPair.getNetwork())
 
   let totalValue = new BigNumber(0)
   for (const input of inputs) {
-    tx.addInput(input.hash, input.pos)
+    txb.addInput(input.hash, input.pos)
     totalValue = totalValue.plus(input.value)
   }
 
   // create-contract output
-  tx.addOutput(createContractScript, 0)
+  txb.addOutput(createContractScript, 0)
 
   const change = totalValue.minus(txfee).minus(gasLimitFee).toNumber()
 
   if (change > 0) {
-    tx.addOutput(fromAddress, change)
+    txb.addOutput(fromAddress, change)
   }
 
   for (let i = 0; i < inputs.length; i++) {
-    tx.sign(i, keyPair)
+    txb.sign(i, keyPair)
   }
 
-  return tx.build().toHex()
+  return txb.build().toHex()
 }
 
 const defaultContractSendTxOptions = {
@@ -265,29 +278,29 @@ export function buildSendToContractTransaction(
     throw new Error("could not find UTXOs to build transaction")
   }
 
-  const tx = new TransactionBuilder(keyPair.getNetwork())
+  const txb = new TransactionBuilder(keyPair.getNetwork())
 
-  // add inputs to tx
+  // add inputs to txb
   let vinSum = new BigNumber(0)
   for (const input of inputs) {
-    tx.addInput(input.hash, input.pos)
+    txb.addInput(input.hash, input.pos)
     vinSum = vinSum.plus(input.value)
   }
 
   // send-to-contract output
-  tx.addOutput(opcallScript, amount)
+  txb.addOutput(opcallScript, amount)
 
   // change output (in satoshi)
   const change = vinSum.minus(txfee).minus(gasLimitFee).minus(amount).toNumber()
   if (change > 0) {
-    tx.addOutput(senderAddress, change)
+    txb.addOutput(senderAddress, change)
   }
 
   for (let i = 0; i < inputs.length; i++) {
-    tx.sign(i, keyPair)
+    txb.sign(i, keyPair)
   }
 
-  return tx.build().toHex()
+  return txb.build().toHex()
 }
 
 // The prevalent network fee is 0.004 per KB. If set to 100 times of norm, assume error.

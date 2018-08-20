@@ -5,9 +5,11 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "start-services": "./scripts/start-services.sh",
     "build": "tsc -w",
     "bundle": "webpack --config webpack.config.js",
-    "test": "mocha lib/**/*_test.js"
+    "clean": "docker-compose stop && docker-compose rm -f && rm -rf ./data && rm -rf lib",
+    "test": "tsc && mocha lib/**/*.test.js"
   },
   "keywords": [],
   "author": "",
@@ -23,10 +25,10 @@
     "@types/node": "^8.9.1",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
-    "tslint": "^5.9.1",
-    "typescript": "^2.7.1",
     "ts-loader": "^2.3.7",
-    "webpack": "^3.6.0"
+    "tslint": "^5.9.1",
+    "typescript": "^3.0.1",
+    "webpack": "^4.16.5"
   },
   "dependencies": {
     "@types/bip38": "^2.0.0",
@@ -37,6 +39,7 @@
     "bip39": "^2.5.0",
     "buffer": "^5.1.0",
     "coinselect": "^3.1.11",
+    "qtumd-rpc": "^0.0.2",
     "qtumjs-lib": "^0.0.6",
     "safe-buffer": "^5.1.1",
     "secp256k1": "^3.5.0",

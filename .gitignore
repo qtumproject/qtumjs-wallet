@@ -3,3 +3,4 @@ node_modules
 *.tgz
 src/scripts
 notes
+/data

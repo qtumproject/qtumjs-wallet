@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  insightapi:
+    build: ./scripts
+    links:
+    - mongo
+    volumes:
+    - ./data/:/data
+    ports:
+    - "3001:3001"
+    - "18332:18332"
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ""
+      MONGO_INITDB_ROOT_PASSWORD: ""
+    volumes:
+    - ./data/mongodb:/data/db

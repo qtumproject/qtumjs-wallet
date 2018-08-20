@@ -11,6 +11,8 @@ import {
   IUTXO,
   IContractSendTXOptions,
   ISendTxOptions,
+  buildCreateContractTransaction,
+  IContractCreateTXOptions,
 } from "./tx"
 import scryptParams from "./scryptParams"
 
@@ -33,11 +35,6 @@ export class Wallet {
     this.insight = Insight.forNetwork(this.network)
   }
 
-  // public validateMnemonic(mnemonic, password) {
-  //   const tempWallet = Wallet.restoreFromMnemonic(mnemonic, password)
-  //   return this.keyPair.toWIF() === tempWallet.keyPair.toWIF()
-  // }
-
   public toWIF(): string {
     return this.keyPair.toWIF()
   }
@@ -49,7 +46,7 @@ export class Wallet {
     return this.insight.getInfo(this.address)
   }
 
-  public async getUTXOs() {
+  public async getUTXOs(): Promise<Insight.IUTXO[]> {
     return this.insight.listUTXOs(this.address)
   }
 
@@ -245,8 +242,32 @@ export class Wallet {
     return new Wallet(childKeyPair, this.network)
   }
 
-  // generateCreateContractTx
-  // contractCreate
+  public async contractCreate(
+    code: string,
+    opts: IContractCreateTXOptions = {},
+  ): Promise<Insight.ISendRawTxResult> {
+    const rawTx = await this.generateCreateContractTx(code, opts)
+    return this.sendRawTx(rawTx)
+  }
+
+  public async generateCreateContractTx(
+    code: string,
+    opts: IContractCreateTXOptions = {},
+  ): Promise<string> {
+    const utxos = await this.getBitcoinjsUTXOs()
+
+    const feeRate = Math.ceil(opts.feeRate || await this.feeRatePerByte())
+
+    // TODO: estimate the precise gasLimit
+
+    return buildCreateContractTransaction(
+      utxos,
+      this.keyPair,
+      code,
+      feeRate,
+      opts,
+    )
+  }
 
   // TODO
   // qrc20 lookup

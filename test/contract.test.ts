@@ -1,18 +1,17 @@
 import { assert } from "chai"
 
-import { Wallet, networks, NetworkNames } from "../src"
-import {sleep} from "../src/time"
-import QtumRPC, {generateBlock} from "./qtumRPC"
+import { Wallet, networks } from "../src"
+import { sleep } from "../src/time"
+import { generateBlock } from "./qtumRPC"
 
 describe("Contract", () => {
   const network = networks.regtest
   const wifPrivateKey = "cMbgxCJrTYUqgcmiC1berh5DFrtY1KeU4PXZ6NZxgenniF1mXCRk"
   const wallet: Wallet = network.fromWIF(wifPrivateKey)
-  const rpcClient = new QtumRPC({
-    user: "qtum",
-    pass: "test",
-    port: "18332",
-    protocol: "http",
+
+  before(async () => {
+    // Avoid insight API 400 error
+    await sleep(1000)
   })
 
   let txid: string

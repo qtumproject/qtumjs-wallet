@@ -1,6 +1,6 @@
 import { assert } from "chai"
 
-import { networks, generateMnemonic } from "../src"
+import { networks } from "../src"
 
 describe("Insight", async function() {
   this.timeout(10000)

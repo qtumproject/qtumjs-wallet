@@ -38,7 +38,7 @@ describe("Wallet", () => {
     assert.equal(wallet.address, "qUbxboqjBRp96j3La8D1RYkyqx5uQbJPoW")
   })
 
-  it("recovers wallet from EncryptedPrivateKey", function() {
+  it("recovers wallet from EncryptedPrivateKey", () => {
     const wif = "cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE"
     const encryptPassword = "testtest"
 

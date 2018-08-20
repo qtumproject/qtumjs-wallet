@@ -9,7 +9,8 @@
     "build": "tsc -w",
     "bundle": "webpack --config webpack.config.js",
     "clean": "docker-compose stop && docker-compose rm -f && rm -rf ./data && rm -rf lib",
-    "test": "tsc && mocha lib/**/*.test.js"
+    "test": "tsc && mocha lib/**/*.test.js",
+    "test-watch": "tsc -w & mocha -w lib/**/*.test.js"
   },
   "keywords": [],
   "author": "",

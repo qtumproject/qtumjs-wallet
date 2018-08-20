@@ -14,6 +14,26 @@ This library makes it possible to run DApp without the users having to run a ful
 yarn add qtumjs-wallet
 ```
 
+## Running Tests
+
+The qtumjs-wallet depends on a number of external services. To run the unit tests, you'll need to start the services using [docker-compose](https://docs.docker.com/compose/install/).
+
+```
+npm run start-services
+```
+
+Then run the tests:
+
+```
+npm run test
+```
+
+Or, to rebuild and rerun tests automatically:
+
+```
+npm run test-watch
+```
+
 ## Implementation Notes
 
 There are some differences from the original web wallet repo.

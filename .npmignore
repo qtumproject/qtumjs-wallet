@@ -7,3 +7,6 @@ src
 node_modules
 .cache
 dist
+data
+scripts
+notes

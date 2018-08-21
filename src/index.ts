@@ -7,6 +7,8 @@ import * as bip39 from "bip39"
 import { decode } from "wif"
 import { privateKeyVerify } from "secp256k1"
 
+export { scrypt } from "./scrypt"
+
 export function generateMnemonic(): string {
   return bip39.generateMnemonic()
 }

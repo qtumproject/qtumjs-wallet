@@ -3,7 +3,7 @@ import { assert } from "chai"
 import { networks, generateMnemonic, NetworkNames } from "./"
 import { generateBlock } from "./qtumRPC"
 import { sleep } from "./time"
-import { IScryptParams } from "./scryptParams"
+import { params } from "./scrypt"
 
 describe("Wallet", () => {
   const network = networks.regtest
@@ -44,15 +44,9 @@ describe("Wallet", () => {
 
     const wallet = network.fromWIF(wif)
 
-    const quickScrypt: IScryptParams = {
-      N: 2,
-      r: 2,
-      p: 1,
-    }
+    const encryptedKey = wallet.toEncryptedPrivateKey(encryptPassword, params.noop)
 
-    const encryptedKey = wallet.toEncryptedPrivateKey(encryptPassword, quickScrypt)
-
-    const wallet2 = network.fromEncryptedPrivateKey(encryptedKey, encryptPassword, quickScrypt)
+    const wallet2 = network.fromEncryptedPrivateKey(encryptedKey, encryptPassword, params.noop)
 
     assert.equal(wallet2.toWIF(), wif)
   })

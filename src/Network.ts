@@ -5,8 +5,8 @@ import * as wifEncoder from "wif"
 
 import { Wallet } from "./Wallet"
 import { Insight } from "./Insight"
-import scryptParams, { IScryptParams } from "./scryptParams"
 import { validatePrivateKey } from "./index"
+import { IScryptParams, params } from "./scrypt"
 
 export interface INetworkInfo {
   name: string
@@ -89,14 +89,14 @@ export class Network {
    * constructs a wallet from bip38 encrypted private key
    * @param encrypted private key string
    * @param passhprase password
-   * @param params scryptParams
+   * @param scryptParams scryptParams
    */
   public fromEncryptedPrivateKey(
     encrypted: string,
     passhprase: string,
-    params: IScryptParams = scryptParams,
+    scryptParams: IScryptParams = params.bip38,
   ): Wallet {
-    const { privateKey, compressed } = bip38.decrypt(encrypted, passhprase, undefined, params)
+    const { privateKey, compressed } = bip38.decrypt(encrypted, passhprase, undefined, scryptParams)
     const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
 
     return this.fromWIF(decoded)

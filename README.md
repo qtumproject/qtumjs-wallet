@@ -34,6 +34,12 @@ Or, to rebuild and rerun tests automatically:
 npm run test-watch
 ```
 
+If you did not terminate the testing docker services properly, run the clean task first before restart:
+
+```
+npm run clean
+```
+
 ## Implementation Notes
 
 There are some differences from the original web wallet repo.

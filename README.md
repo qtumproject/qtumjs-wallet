@@ -788,3 +788,49 @@ Or omit the child wallet index (defaults to 0):
 // The default child wallet index is 0
 const childWallet = wallet.deriveChildWallet()
 ```
+
+## scrypt (non-stable API)
+
+This is an scrypt helper function, which may be removed in the future.
+
+To use scrypt to hash a secret:
+
+```js
+import { scrypt } from "qtumjs-wallet"
+
+// by default, the bip38 scrypt parameters are used
+const hash = scrypt("my secret", {
+  progress: (status) => {
+    console.log("status", status)
+  },
+})
+
+console.log(hash)
+```
+
+The progress callback is invoked every 1000 rounds. And finally the result hash is a hex string.
+
+```
+status { current: 257000, total: 262144, percent: 98.0377197265625 }
+status { current: 258000, total: 262144, percent: 98.419189453125 }
+status { current: 259000, total: 262144, percent: 98.8006591796875 }
+status { current: 260000, total: 262144, percent: 99.18212890625 }
+status { current: 261000, total: 262144, percent: 99.5635986328125 }
+status { current: 262000, total: 262144, percent: 99.945068359375 }
+
+8b41dd9e92490b8f2b01cbe1f20e2c57315b5f861da1ede1002bc544d90f7e56
+```
+
+You may also choose to specify your own scrypt parameters:
+
+```js
+import { scrypt, params } from "qtumjs-wallet"
+
+const hash = scrypt("my secret", {
+  params: {
+    N: 1 << 14,
+    r: 8,
+    p: 1,
+  },
+})
+```

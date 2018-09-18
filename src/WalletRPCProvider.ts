@@ -11,12 +11,23 @@ export class WalletRPCProvider implements IProvider {
     method: string,
     params: any[] = [],
     opts: any = {}): Promise<Insight.IContractCall | Insight.ISendRawTxResult> {
-    const [contractAddress, encodedData, amount = 0, gasLimit = 200000, gasPrice = 0.0000004] = params
+    const [
+      contractAddress,
+      encodedData,
+      // these are optionals
+      amount,
+      gasLimit,
+      gasPrice,
+    ] = params
 
-    // The underlying qtumjs-wallet API expects gasPrice to be specified in sat
-    const gasPriceInSatoshi = Math.floor(gasPrice * 1e8)
+    // The underlying qtumjs-wallet API expects gasPrice and amount to be specified in sat
+    const gasPriceInSatoshi = Math.floor((gasPrice || 0.0000004) * 1e8)
+    const amountInSatoshi = Math.floor((amount || 0) * 1e8)
+
     opts = {
       ...opts,
+      amount: amountInSatoshi,
+      gasLimit: gasLimit || 200000,
       gasPrice: gasPriceInSatoshi,
     }
 

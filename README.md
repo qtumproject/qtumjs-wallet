@@ -44,35 +44,35 @@ npm run clean
 
 There are some differences from the original web wallet repo.
 
-* Removed VUE specific code.
-* Removed reactive data setters that are intended to trigger view updates, to make this a plain-old JavaScript module.
-* Each wallet instance is instantiated with a network explicitly. This allows simultaneous use of different networks.
-* TypeScript for type hinting.
-* Uses satoshi (1e8) as internal units
-  * Can represent up to ~90 million QTUM accurately.
-* Uses [coinselect](https://github.com/bitcoinjs/coinselect) to select utxos.
-  * Taking into account the size of a transaction, and multiplies that by fee rate per byte.
-  * Uses blackjack algorithm, and fallbacks to simple accumulative.
-* Set tx relay fee automatically from fee rate reported by the network.
-* send-to-contract transaction can transfer value to the contract
+- Removed VUE specific code.
+- Removed reactive data setters that are intended to trigger view updates, to make this a plain-old JavaScript module.
+- Each wallet instance is instantiated with a network explicitly. This allows simultaneous use of different networks.
+- TypeScript for type hinting.
+- Uses satoshi (1e8) as internal units
+  - Can represent up to ~90 million QTUM accurately.
+- Uses [coinselect](https://github.com/bitcoinjs/coinselect) to select utxos.
+  - Taking into account the size of a transaction, and multiplies that by fee rate per byte.
+  - Uses blackjack algorithm, and fallbacks to simple accumulative.
+- Set tx relay fee automatically from fee rate reported by the network.
+- send-to-contract transaction can transfer value to the contract
 
 # API
 
-+ [Networks](#networks)
-  + [fromWIF](#fromwif)
-  + [fromMnemonic](#frommnemonic)
-  + [fromEncryptedPrivateKey](#fromencryptedprivatekey)
-+ [Wallet](#wallet)
-  + [async wallet.getInfo](#async-walletgetinfo)
-  + [async wallet.send](#async-walletsend)
-  + [async wallet.generateTx](#async-walletgeneratetx)
-  + [async wallet.contractSend](#async-walletcontractsend)
-  + [async wallet.generateContractSendTx](#async-walletgeneratecontractsendtx)
-  + [async wallet.contractCall](#async-walletcontractcall)
-  + [async getTransactions](#async-gettransactions)
-  + [toEncryptedPrivateKey](#toencryptedprivatekey)
-  + [deriveChildWallet](#derivechildwallet)
-
+- [Networks](#networks)
+  - [fromWIF](#fromwif)
+  - [fromMnemonic](#frommnemonic)
+  - [fromEncryptedPrivateKey](#fromencryptedprivatekey)
+- [Wallet](#wallet)
+  - [async wallet.getInfo](#async-walletgetinfo)
+  - [async wallet.send](#async-walletsend)
+  - [async wallet.sendEstimateMaxValue](#async-walletsendestimatemaxvalue)
+  - [async wallet.generateTx](#async-walletgeneratetx)
+  - [async wallet.contractSend](#async-walletcontractsend)
+  - [async wallet.generateContractSendTx](#async-walletgeneratecontractsendtx)
+  - [async wallet.contractCall](#async-walletcontractcall)
+  - [async getTransactions](#async-gettransactions)
+  - [toEncryptedPrivateKey](#toencryptedprivatekey)
+  - [deriveChildWallet](#derivechildwallet)
 
 # Examples
 
@@ -163,7 +163,6 @@ async function main() {
 
   const wallet = network.fromWIF(privateKey)
 
-
   const contractAddress = "b10071ee33512ce8a0c06ecbc14a5f585a27a3e2"
   const encodedData = "e179b912" // burnbabyburn()
 
@@ -228,7 +227,8 @@ public address: qWAnfBnRNhZBqtgSdgHjSfS2D5Jawmafra
 
 ```ts
 const network = networks.testnet
-const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
+const mnemonic =
+  "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
 const password = "covfefe"
 
 const wallet = network.fromMnemonic(mnemonic, password)
@@ -358,6 +358,14 @@ const tx = await wallet.send(toAddress, amount, {
 })
 ```
 
+## async wallet.sendEstimateMaxValue
+
+Estimate the maximum value that could be sent from this wallet address.
+
+```ts
+const maxSend = await wallet.sendEstimateMaxValue(wallet.address)
+```
+
 ## async wallet.generateTx
 
 Generate and sign a payment transaction.
@@ -459,9 +467,8 @@ Example:
 
 Invoke the `burn()` method, and transfer 5000000 satoshi to the contract.
 
-* The `burn()` method call ABI encodes to `e179b912`
-* The 5000000 is `msg.value` in contract code.
-
+- The `burn()` method call ABI encodes to `e179b912`
+- The 5000000 is `msg.value` in contract code.
 
 ```ts
 const contractAddress = "1620cd3c24b29d424932ec30c5925f8c0a00941c"
@@ -507,9 +514,13 @@ Example:
 const contractAddress = "1620cd3c24b29d424932ec30c5925f8c0a00941c"
 const encodedData = "e179b912"
 
-const rawtx = await wallet.generateContractSendTx(contractAddress, encodedData, {
-  amount: 0.01 * 1e8,
-})
+const rawtx = await wallet.generateContractSendTx(
+  contractAddress,
+  encodedData,
+  {
+    amount: 0.01 * 1e8,
+  },
+)
 
 console.log(rawtx)
 ```
@@ -649,7 +660,9 @@ const network = networks.testnet
 
 const insight = network.insight()
 
-const info = await insight.getTransactionInfo("f20914f3d810010c0a74df60abb3fcf0d3ff2669d944ce187f079ec9faec563e")
+const info = await insight.getTransactionInfo(
+  "f20914f3d810010c0a74df60abb3fcf0d3ff2669d944ce187f079ec9faec563e",
+)
 console.log(info)
 ```
 
@@ -705,14 +718,18 @@ Example:
 
 ```ts
 const network = networks.testnet
-const mnemonic = "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
+const mnemonic =
+  "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
 const password = "covfefe"
 
 const wallet = network.fromMnemonic(mnemonic, password)
 
 console.log("public address:", wallet.address)
 console.log("private key (WIF):", wallet.toWIF())
-console.log("encrypted bip38 private key is:", wallet.toEncryptedPrivateKey(password))
+console.log(
+  "encrypted bip38 private key is:",
+  wallet.toEncryptedPrivateKey(password),
+)
 ```
 
 Example output:
@@ -723,7 +740,6 @@ private key (WIF): cNQKccYYQyGX9G9Qxq2DJev9jHygbZpb2UG7EvUapbtDx5XhkhYE
 encrypted bip38 private key is: 6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM
 encryption takes 2.214 seconds
 ```
-
 
 ## fromEncryptedPrivateKey
 

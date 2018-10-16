@@ -1,16 +1,8 @@
-import {
-  ECPair,
-  TransactionBuilder,
-  script as BTCScript,
-} from "bitcoinjs-lib"
+import { ECPair, TransactionBuilder, script as BTCScript } from "bitcoinjs-lib"
 
-import {
-  encode as encodeCScriptInt,
-} from "bitcoinjs-lib/src/script_number"
+import { encode as encodeCScriptInt } from "bitcoinjs-lib/src/script_number"
 
-import {
-  BigNumber,
-} from "bignumber.js"
+import { BigNumber } from "bignumber.js"
 
 import { Buffer } from "buffer"
 
@@ -94,6 +86,34 @@ function ensureAmountInteger(n: number) {
   }
 }
 
+export function estimatePubKeyHashTransactionMaxSend(
+  utxos: IUTXO[],
+  to: string,
+  feeRate: number,
+) {
+  let maxAmount = 0
+  for (const utxo of utxos) {
+    maxAmount += utxo.value
+  }
+
+  while (maxAmount > 0) {
+    const { inputs, fee: txfee } = coinSelect(
+      utxos,
+      [{ value: maxAmount, address: to }],
+      feeRate,
+    )
+
+    if (inputs != null) {
+      return maxAmount
+    }
+
+    // step down by 0.001 qtum
+    maxAmount = maxAmount - 100000
+  }
+
+  return 0
+}
+
 /**
  * Build a pay-to-pubkey-hash transaction
  *
@@ -110,17 +130,15 @@ export function buildPubKeyHashTransaction(
   amount: number,
   feeRate: number,
 ) {
-
   ensureAmountInteger(amount)
 
   const senderAddress = keyPair.getAddress()
 
-  const {
-    inputs,
-    fee: txfee,
-  } = coinSelect(utxos, [
-    { value: amount, address: to },
-  ], feeRate)
+  const { inputs, fee: txfee } = coinSelect(
+    utxos,
+    [{ value: amount, address: to }],
+    feeRate,
+  )
 
   if (inputs == null) {
     throw new Error("could not find UTXOs to build transaction")
@@ -136,7 +154,10 @@ export function buildPubKeyHashTransaction(
 
   txb.addOutput(to, amount)
 
-  const change = vinSum.minus(txfee).minus(amount).toNumber()
+  const change = vinSum
+    .minus(txfee)
+    .minus(amount)
+    .toNumber()
   if (change > 0) {
     txb.addOutput(senderAddress, change)
   }
@@ -163,7 +184,6 @@ export function buildCreateContractTransaction(
   feeRate: number,
   opts: IContractCreateTXOptions = {},
 ): string {
-
   const gasLimit = opts.gasLimit || defaultContractSendTxOptions.gasLimit
   const gasPrice = opts.gasPrice || defaultContractSendTxOptions.gasPrice
   const gasLimitFee = new BigNumber(gasLimit).times(gasPrice).toNumber()
@@ -179,13 +199,16 @@ export function buildCreateContractTransaction(
   const fromAddress = keyPair.getAddress()
   const amount = 0
 
-  const {
-    inputs,
-    fee: txfee,
-  } = coinSelect(utxos, [
-    { value: gasLimitFee }, // gas fee
-    { script: createContractScript, value: amount }, // script + transfer amount to contract
-  ], feeRate)
+  const { inputs, fee: txfee } = coinSelect(
+    utxos,
+    [
+      // gas fee
+      { value: gasLimitFee },
+      // script + transfer amount to contract
+      { script: createContractScript, value: amount },
+    ],
+    feeRate,
+  )
 
   if (inputs == null) {
     throw new Error("could not find UTXOs to build transaction")
@@ -202,7 +225,10 @@ export function buildCreateContractTransaction(
   // create-contract output
   txb.addOutput(createContractScript, 0)
 
-  const change = totalValue.minus(txfee).minus(gasLimitFee).toNumber()
+  const change = totalValue
+    .minus(txfee)
+    .minus(gasLimitFee)
+    .toNumber()
 
   if (change > 0) {
     txb.addOutput(fromAddress, change)
@@ -242,7 +268,6 @@ export function buildSendToContractTransaction(
   feeRate: number,
   opts: IContractSendTXOptions = {},
 ): string {
-
   // feeRate must be an integer number, or coinselect would always fail
   feeRate = Math.floor(feeRate)
 
@@ -266,13 +291,14 @@ export function buildSendToContractTransaction(
     OPS.OP_CALL,
   ])
 
-  const {
-    inputs,
-    fee: txfee,
-  } = coinSelect(utxos, [
-    { value: gasLimitFee }, // gas fee
-    { script: opcallScript, value: amount }, // script + transfer amount to contract
-  ], feeRate)
+  const { inputs, fee: txfee } = coinSelect(
+    utxos,
+    [
+      { value: gasLimitFee }, // gas fee
+      { script: opcallScript, value: amount }, // script + transfer amount to contract
+    ],
+    feeRate,
+  )
 
   if (inputs == null) {
     throw new Error("could not find UTXOs to build transaction")
@@ -291,7 +317,11 @@ export function buildSendToContractTransaction(
   txb.addOutput(opcallScript, amount)
 
   // change output (in satoshi)
-  const change = vinSum.minus(txfee).minus(gasLimitFee).minus(amount).toNumber()
+  const change = vinSum
+    .minus(txfee)
+    .minus(gasLimitFee)
+    .minus(amount)
+    .toNumber()
   if (change > 0) {
     txb.addOutput(senderAddress, change)
   }
@@ -304,7 +334,7 @@ export function buildSendToContractTransaction(
 }
 
 // The prevalent network fee is 0.004 per KB. If set to 100 times of norm, assume error.
-const MAX_FEE_RATE = Math.ceil(0.004 * 100 * 1e8 / 1024)
+const MAX_FEE_RATE = Math.ceil((0.004 * 100 * 1e8) / 1024)
 
 function checkFeeRate(feeRate: number) {
   if (feeRate > MAX_FEE_RATE) {

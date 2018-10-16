@@ -1,6 +1,7 @@
-import { NetworkNames, INetworkInfo } from "./Network"
-
 import axios, { AxiosInstance } from "axios"
+
+import { INetworkInfo } from "./Network"
+import { NetworkNames } from "./constants"
 
 const INSIGHT_BASEURLS: { [key: string]: string } = {
   [NetworkNames.MAINNET]: "https://explorer.qtum.org/insight-api",
@@ -54,10 +55,15 @@ export class Insight {
     return res.data
   }
 
-  public async contractCall(address: string, encodedData: string): Promise<Insight.IContractCall> {
+  public async contractCall(
+    address: string,
+    encodedData: string,
+  ): Promise<Insight.IContractCall> {
     // FIXME wow, what a weird API design... maybe we should just host the RPC
     // server, with limited API exposed.
-    const res = await this.axios.get(`/contracts/${address}/hash/${encodedData}/call`)
+    const res = await this.axios.get(
+      `/contracts/${address}/hash/${encodedData}/call`,
+    )
 
     return res.data
   }
@@ -99,7 +105,9 @@ export class Insight {
    * Get single transaction's info
    * @param id
    */
-  public async getTransactionInfo(id: string): Promise<Insight.IRawTransactionInfo> {
+  public async getTransactionInfo(
+    id: string,
+  ): Promise<Insight.IRawTransactionInfo> {
     const res = await this.axios.get(`/tx/${id}`)
     return res.data as Insight.IRawTransactionInfo
   }
@@ -109,11 +117,15 @@ export class Insight {
    * @param address
    * @param pageNum
    */
-  public async getTransactions(address: string, pageNum: number = 0): Promise<Insight.IRawTransactions> {
-    const result = await this.axios.get(`/txs/`, { params: { address, pageNum } })
+  public async getTransactions(
+    address: string,
+    pageNum: number = 0,
+  ): Promise<Insight.IRawTransactions> {
+    const result = await this.axios.get(`/txs/`, {
+      params: { address, pageNum },
+    })
     return result.data as Insight.IRawTransactions
   }
-
 }
 
 export namespace Insight {
@@ -217,9 +229,9 @@ export namespace Insight {
 
   export interface IRawTransactionInfo {
     txid: string
-    version: number,
-    locktime: number,
-    receipt: ITransactionReceipt[],
+    version: number
+    locktime: number
+    receipt: ITransactionReceipt[]
     vin: IVin[] // 入账，[交易, ...]
     vout: IVout[] // 出账，[交易, ...]
     confirmations: number
@@ -233,8 +245,7 @@ export namespace Insight {
   }
 
   export interface IRawTransactions {
-    pagesTotal: number,
-    txs: IRawTransactionInfo[],
+    pagesTotal: number
+    txs: IRawTransactionInfo[]
   }
-
 }

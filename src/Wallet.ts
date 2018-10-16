@@ -13,6 +13,7 @@ import {
   ISendTxOptions,
   buildCreateContractTransaction,
   IContractCreateTXOptions,
+  estimatePubKeyHashTransactionMaxSend,
 } from "./tx"
 
 import { params, IScryptParams } from "./scrypt"
@@ -22,16 +23,13 @@ import { params, IScryptParams } from "./scrypt"
  *
  * This value will be used for testnet.
  */
-const defaultTxFeePerByte = Math.ceil(0.004 * 1e8 / 1024)
+const defaultTxFeePerByte = Math.ceil((0.004 * 1e8) / 1024)
 
 export class Wallet {
   public address: string
   private insight: Insight
 
-  constructor(
-    public keyPair: ECPair,
-    public network: INetworkInfo,
-  ) {
+  constructor(public keyPair: ECPair, public network: INetworkInfo) {
     this.address = this.keyPair.getAddress()
     this.insight = Insight.forNetwork(this.network)
   }
@@ -55,11 +53,15 @@ export class Wallet {
    * get transactions by wallet address
    * @param pageNum page number
    */
-  public async getTransactions(pageNum?: number): Promise<Insight.IRawTransactions> {
+  public async getTransactions(
+    pageNum?: number,
+  ): Promise<Insight.IRawTransactions> {
     return this.insight.getTransactions(this.address, pageNum)
   }
 
-  public async getTransactionInfo(id: string): Promise<Insight.IRawTransactionInfo> {
+  public async getTransactionInfo(
+    id: string,
+  ): Promise<Insight.IRawTransactionInfo> {
     return this.insight.getTransactionInfo(id)
   }
 
@@ -74,7 +76,13 @@ export class Wallet {
   ): string {
     const { privateKey, compressed } = wif.decode(this.toWIF())
 
-    return bip38.encrypt(privateKey, compressed, passphrase, undefined, scryptParams)
+    return bip38.encrypt(
+      privateKey,
+      compressed,
+      passphrase,
+      undefined,
+      scryptParams,
+    )
   }
 
   /**
@@ -104,15 +112,28 @@ export class Wallet {
   ): Promise<string> {
     const utxos = await this.getBitcoinjsUTXOs()
 
-    const feeRate = Math.ceil(opts.feeRate || await this.feeRatePerByte())
+    const feeRate = Math.ceil(opts.feeRate || (await this.feeRatePerByte()))
 
-    return buildPubKeyHashTransaction(
-      utxos,
-      this.keyPair,
-      to,
-      amount,
-      feeRate,
-    )
+    return buildPubKeyHashTransaction(utxos, this.keyPair, to, amount, feeRate)
+  }
+
+  /**
+   * Estimate the maximum value that could be sent from this wallet address.
+   *
+   * @param to The receiving address
+   * @param opts
+   *
+   * @returns satoshi
+   */
+  public async sendEstimateMaxValue(
+    to: string,
+    opts: ISendTxOptions = {},
+  ): Promise<number> {
+    const utxos = await this.getBitcoinjsUTXOs()
+
+    const feeRate = Math.ceil(opts.feeRate || (await this.feeRatePerByte()))
+
+    return estimatePubKeyHashTransactionMaxSend(utxos, to, feeRate)
   }
 
   /**
@@ -155,10 +176,9 @@ export class Wallet {
     encodedData: string,
     opts: IContractSendTXOptions = {},
   ): Promise<string> {
-
     const utxos = await this.getBitcoinjsUTXOs()
 
-    const feeRate = Math.ceil(opts.feeRate || await this.feeRatePerByte())
+    const feeRate = Math.ceil(opts.feeRate || (await this.feeRatePerByte()))
 
     // TODO: estimate the precise gasLimit
 
@@ -200,7 +220,11 @@ export class Wallet {
     encodedData: string,
     opts: IContractSendTXOptions = {},
   ): Promise<Insight.ISendRawTxResult> {
-    const rawTx = await this.generateContractSendTx(contractAddress, encodedData, opts)
+    const rawTx = await this.generateContractSendTx(
+      contractAddress,
+      encodedData,
+      opts,
+    )
     return this.sendRawTx(rawTx)
   }
 
@@ -257,7 +281,7 @@ export class Wallet {
   ): Promise<string> {
     const utxos = await this.getBitcoinjsUTXOs()
 
-    const feeRate = Math.ceil(opts.feeRate || await this.feeRatePerByte())
+    const feeRate = Math.ceil(opts.feeRate || (await this.feeRatePerByte()))
 
     // TODO: estimate the precise gasLimit
 

@@ -7,6 +7,8 @@ import { Wallet } from "./Wallet"
 import { Insight } from "./Insight"
 import { validatePrivateKey } from "./index"
 import { IScryptParams, params } from "./scrypt"
+import { NetworkNames } from "./constants"
+export { NetworkNames } from "./constants"
 
 export interface INetworkInfo {
   name: string
@@ -16,19 +18,13 @@ export interface INetworkInfo {
 
   // HDWallet https://en.bitcoin.it/wiki/BIP_0032
   bip32: {
-    public: number,
-    private: number,
+    public: number
+    private: number
   }
 
   pubKeyHash: number
   scriptHash: number
   wif: number
-}
-
-export enum NetworkNames {
-  MAINNET = "qtum",
-  TESTNET = "qtum_testnet",
-  REGTEST = "qtum_regtest",
 }
 
 export const networksInfo: { [key: string]: INetworkInfo } = {
@@ -62,8 +58,7 @@ export const networksInfo: { [key: string]: INetworkInfo } = {
 }
 
 export class Network {
-  constructor(public info: INetworkInfo) {
-  }
+  constructor(public info: INetworkInfo) {}
 
   /**
    * Restore a HD-wallet address from mnemonic & password
@@ -72,14 +67,14 @@ export class Network {
    * @param password
    *
    */
-  public fromMnemonic(
-    mnemonic: string,
-    password?: string,
-  ): Wallet {
+  public fromMnemonic(mnemonic: string, password?: string): Wallet {
     // if (bip39.validateMnemonic(mnemonic) == false) return false
     const seedHex = bip39.mnemonicToSeedHex(mnemonic, password)
     const hdNode = HDNode.fromSeedHex(seedHex, this.info)
-    const account = hdNode.deriveHardened(88).deriveHardened(0).deriveHardened(0)
+    const account = hdNode
+      .deriveHardened(88)
+      .deriveHardened(0)
+      .deriveHardened(0)
     const keyPair = account.keyPair
 
     return new Wallet(keyPair, this.info)
@@ -96,7 +91,12 @@ export class Network {
     passhprase: string,
     scryptParams: IScryptParams = params.bip38,
   ): Wallet {
-    const { privateKey, compressed } = bip38.decrypt(encrypted, passhprase, undefined, scryptParams)
+    const { privateKey, compressed } = bip38.decrypt(
+      encrypted,
+      passhprase,
+      undefined,
+      scryptParams,
+    )
     const decoded = wifEncoder.encode(this.info.wif, privateKey, compressed)
 
     return this.fromWIF(decoded)
@@ -110,9 +110,7 @@ export class Network {
    * @param mnemonic
    * @param network
    */
-  public fromMobile(
-    mnemonic: string,
-  ): Wallet[] {
+  public fromMobile(mnemonic: string): Wallet[] {
     const seedHex = bip39.mnemonicToSeedHex(mnemonic)
     const hdNode = HDNode.fromSeedHex(seedHex, this.info)
     const account = hdNode.deriveHardened(88).deriveHardened(0)
@@ -133,9 +131,7 @@ export class Network {
    *
    * @param wif
    */
-  public fromWIF(
-    wif: string,
-  ): Wallet {
+  public fromWIF(wif: string): Wallet {
     if (!validatePrivateKey(wif)) {
       throw new Error("wif is invalid, it does not satisfy ECDSA")
     }
@@ -148,9 +144,7 @@ export class Network {
    * Alias for `fromWIF`
    * @param wif
    */
-  public fromPrivateKey(
-    wif: string,
-  ): Wallet {
+  public fromPrivateKey(wif: string): Wallet {
     return this.fromWIF(wif)
   }
 

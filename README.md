@@ -68,6 +68,7 @@ There are some differences from the original web wallet repo.
   - [async wallet.sendEstimateMaxValue](#async-walletsendestimatemaxvalue)
   - [async wallet.generateTx](#async-walletgeneratetx)
   - [async wallet.contractSend](#async-walletcontractsend)
+  - [async wallet.contractSendEstimateMaxValue](#async-walletcontractsendestimatemaxvalue)
   - [async wallet.generateContractSendTx](#async-walletgeneratecontractsendtx)
   - [async wallet.contractCall](#async-walletcontractcall)
   - [async getTransactions](#async-gettransactions)
@@ -487,6 +488,21 @@ Output:
 
 ```
 { txid: 'd12ff9cfd76836d8eb5a39bc40f1dc5e6e2032bfa132f66cca638a7e76f2b6e7' }
+```
+
+## async wallet.contractSendEstimateMaxValue
+
+Estimate the maximum value that could be sent to a contract, substracting the amount reserved for gas.
+
+```ts
+const maxContractSend = await wallet.contractSendEstimateMaxValue(
+  contractAddress,
+  callDataHex,
+  {
+    gasLimit: 250000,
+    gasPrice: 40,
+  },
+)
 ```
 
 ## async wallet.generateContractSendTx

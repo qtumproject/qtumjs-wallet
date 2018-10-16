@@ -14,6 +14,7 @@ import {
   buildCreateContractTransaction,
   IContractCreateTXOptions,
   estimatePubKeyHashTransactionMaxSend,
+  estimateSendToContractTransactionMaxValue,
 } from "./tx"
 
 import { params, IScryptParams } from "./scrypt"
@@ -226,6 +227,36 @@ export class Wallet {
       opts,
     )
     return this.sendRawTx(rawTx)
+  }
+
+  /**
+   * Estimate the maximum value that could be sent to a contract, substracting the amount reserved for gas.
+   *
+   * @param contractAddress Address of the contract in hexadecimal
+   * @param encodedData The ABI encoded method call, and parameter values.
+   * @param opts
+   *
+   * @returns satoshi
+   */
+  public async contractSendEstimateMaxValue(
+    contractAddress: string,
+    encodedData: string,
+    opts: IContractSendTXOptions = {},
+  ): Promise<number> {
+    const utxos = await this.getBitcoinjsUTXOs()
+
+    const feeRate = Math.ceil(opts.feeRate || (await this.feeRatePerByte()))
+
+    // TODO: estimate the precise gasLimit
+
+    return estimateSendToContractTransactionMaxValue(
+      utxos,
+      this.keyPair,
+      contractAddress,
+      encodedData,
+      feeRate,
+      opts,
+    )
   }
 
   /**

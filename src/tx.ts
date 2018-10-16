@@ -250,6 +250,60 @@ const defaultContractSendTxOptions = {
   // senderAddress
 }
 
+export function estimateSendToContractTransactionMaxValue(
+  utxos: IUTXO[],
+  keyPair: ECPair,
+  contractAddress: string,
+  encodedData: string,
+  feeRate: number,
+  opts: IContractSendTXOptions = {},
+): number {
+  feeRate = Math.floor(feeRate)
+
+  const gasLimit = opts.gasLimit || defaultContractSendTxOptions.gasLimit
+  const gasPrice = opts.gasPrice || defaultContractSendTxOptions.gasPrice
+
+  let amount = 0
+  for (const utxo of utxos) {
+    amount += utxo.value
+  }
+
+  amount -= gasLimit * gasPrice
+  ensureAmountInteger(amount)
+
+  const senderAddress = keyPair.getAddress()
+
+  // excess gas will refund in the coinstake tx of the mined block
+  const gasLimitFee = new BigNumber(gasLimit).times(gasPrice).toNumber()
+
+  const opcallScript = BTCScript.compile([
+    OPS.OP_4,
+    encodeCScriptInt(gasLimit),
+    encodeCScriptInt(gasPrice),
+    Buffer.from(encodedData, "hex"),
+    Buffer.from(contractAddress, "hex"),
+    OPS.OP_CALL,
+  ])
+
+  while (amount > 0) {
+    const { inputs, fee: txfee } = coinSelect(
+      utxos,
+      [
+        { value: gasLimitFee }, // gas fee
+        { script: opcallScript, value: amount }, // script + transfer amount to contract
+      ],
+      feeRate,
+    )
+
+    if (inputs != null) {
+      return amount
+    }
+
+    amount -= 10000
+  }
+
+  return 0
+}
 /**
  * Build a send-to-contract transaction
  *

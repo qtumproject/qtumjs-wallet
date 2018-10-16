@@ -364,7 +364,7 @@ const tx = await wallet.send(toAddress, amount, {
 Estimate the maximum value that could be sent from this wallet address.
 
 ```ts
-const maxSend = await wallet.sendEstimateMaxValue(wallet.address)
+const maxSend = await wallet.sendEstimateMaxValue(toAddress)
 ```
 
 ## async wallet.generateTx

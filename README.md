@@ -80,21 +80,21 @@ There are some differences from the original web wallet repo.
 ## Create Mnemonic+Password Wallet
 
 ```js
-import { networks, generateMnemonic } from "qtumjs-wallet"
+import { networks, generateMnemonic } from "qtumjs-wallet";
 
 async function main() {
-  const network = networks.testnet
-  const mnemonic = generateMnemonic()
-  const password = "covfefe"
+  const network = networks.testnet;
+  const mnemonic = generateMnemonic();
+  const password = "covfefe";
 
-  const wallet = network.fromMnemonic(mnemonic, password)
+  const wallet = network.fromMnemonic(mnemonic, password);
 
-  console.log("mnemonic:", mnemonic)
-  console.log("public address:", wallet.address)
-  console.log("private key (WIF):", wallet.toWIF())
+  console.log("mnemonic:", mnemonic);
+  console.log("public address:", wallet.address);
+  console.log("private key (WIF):", wallet.toWIF());
 }
 
-main().catch((err) => console.log(err))
+main().catch(err => console.log(err));
 ```
 
 Example Output:
@@ -114,24 +114,24 @@ The transaction is signed locally, and the transaction submitted to a remote API
 The currency unit used is `satoshi`. To convert qtum to satoshi you should multiply the amount you want with `1e8`.
 
 ```js
-import { networks } from "qtumjs-wallet"
+import { networks } from "qtumjs-wallet";
 
 async function main() {
   // Use the test network. Or `networks.mainnet`
-  const network = networks.testnet
+  const network = networks.testnet;
 
-  const wif = "cU4ficvRNvR7jnbtczCWo5s9rB9Tdg1U4LkArVpGU6cKnDq7LFoP"
-  const wallet = network.fromWIF(wif)
+  const wif = "cU4ficvRNvR7jnbtczCWo5s9rB9Tdg1U4LkArVpGU6cKnDq7LFoP";
+  const wallet = network.fromWIF(wif);
 
-  console.log(wallet.address)
+  console.log(wallet.address);
 
-  const toAddr = "qS3ThpDn4HRH9we2hZUdF3F3uR7TTvpZ9v"
+  const toAddr = "qS3ThpDn4HRH9we2hZUdF3F3uR7TTvpZ9v";
   // Sending 0.1 qtum
-  const sendtx = await wallet.send(toAddr, 1, 0.1 * 1e8)
-  console.log("sendtx", sendtx)
+  const sendtx = await wallet.send(toAddr, 0.01 * 1e8, { feeRate: 500 });
+  console.log("sendtx", sendtx);
 }
 
-main().catch((err) => console.log(err))
+main().catch(err => console.log(err));
 ```
 
 ## Send To Contract
@@ -155,26 +155,26 @@ contract Burn {
 The ABI encoding for the `burnbabyburn()` invokation is `e179b912`. We'll burn 0.05 qtum, expressed in unit of satoshi.
 
 ```ts
-import { networks } from "qtumjs-wallet"
+import { networks } from "qtumjs-wallet";
 
 async function main() {
-  const network = networks.testnet
+  const network = networks.testnet;
 
-  const privateKey = "cU4ficvRNvR7jnbtczCWo5s9rB9Tdg1U4LkArVpGU6cKnDq7LFoP"
+  const privateKey = "cU4ficvRNvR7jnbtczCWo5s9rB9Tdg1U4LkArVpGU6cKnDq7LFoP";
 
-  const wallet = network.fromWIF(privateKey)
+  const wallet = network.fromWIF(privateKey);
 
-  const contractAddress = "b10071ee33512ce8a0c06ecbc14a5f585a27a3e2"
-  const encodedData = "e179b912" // burnbabyburn()
+  const contractAddress = "b10071ee33512ce8a0c06ecbc14a5f585a27a3e2";
+  const encodedData = "e179b912"; // burnbabyburn()
 
   const tx = await wallet.contractSend(contractAddress, encodedData, {
-    amount: 0.05 * 1e8, // 0.05 qtum in satoshi
-  })
+    amount: 0.05 * 1e8 // 0.05 qtum in satoshi
+  });
 
-  console.log(tx)
+  console.log(tx);
 }
 
-main().catch((err) => console.log(err))
+main().catch(err => console.log(err));
 ```
 
 # Networks
@@ -182,13 +182,13 @@ main().catch((err) => console.log(err))
 Two networks are predefined:
 
 ```js
-import { networks } from "qtumjs-wallet"
+import { networks } from "qtumjs-wallet";
 
 // Main Network
-networks.mainnet
+networks.mainnet;
 
 // Test Network
-networks.testnet
+networks.testnet;
 ```
 
 ## fromPrivateKey
@@ -208,12 +208,12 @@ cVHzWuEKUxoRKba9ySZFqUKZ9G5W8NkzthRcPaB65amUJs95RM3d
 ```
 
 ```js
-const network = networks.testnet
+const network = networks.testnet;
 
-const privateKey = "cVEwiJ5NMTdnkW4ZW2ykUopawtLPXQWtPDmvpTh5jmXYMtg8itAz"
+const privateKey = "cVEwiJ5NMTdnkW4ZW2ykUopawtLPXQWtPDmvpTh5jmXYMtg8itAz";
 
-const wallet = network.fromWIF(privateKey)
-console.log("public address:", wallet.address)
+const wallet = network.fromWIF(privateKey);
+console.log("public address:", wallet.address);
 ```
 
 Output:
@@ -227,15 +227,15 @@ public address: qWAnfBnRNhZBqtgSdgHjSfS2D5Jawmafra
 `fromMnemonic` constructs a wallet from mnemonic. User can optionally specify a `password` to add to the mnemonic entropy.
 
 ```ts
-const network = networks.testnet
+const network = networks.testnet;
 const mnemonic =
-  "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
-const password = "covfefe"
+  "hold struggle ready lonely august napkin enforce retire pipe where avoid drip";
+const password = "covfefe";
 
-const wallet = network.fromMnemonic(mnemonic, password)
+const wallet = network.fromMnemonic(mnemonic, password);
 
-console.log("public address:", wallet.address)
-console.log("private key (WIF):", wallet.toWIF())
+console.log("public address:", wallet.address);
+console.log("private key (WIF):", wallet.toWIF());
 ```
 
 Example Output:
@@ -258,8 +258,8 @@ Get basic information about the wallet address.
 Example:
 
 ```ts
-const info = await wallet.getInfo()
-console.log(info)
+const info = await wallet.getInfo();
+console.log(info);
 ```
 
 Output:
@@ -325,11 +325,11 @@ public async send(
 Example:
 
 ```ts
-const toAddress = "qZaTYNEimGLuqnBDpP3KvBKsFs3DbCuwnr"
-const amount = 0.15 * 1e8 // 0.15 QTUM
+const toAddress = "qZaTYNEimGLuqnBDpP3KvBKsFs3DbCuwnr";
+const amount = 0.15 * 1e8; // 0.15 QTUM
 
-const tx = await wallet.send(toAddress, amount)
-console.log(tx)
+const tx = await wallet.send(toAddress, amount);
+console.log(tx);
 ```
 
 Output:
@@ -346,7 +346,7 @@ export interface ISendTxOptions {
    * Fee rate to pay for the raw transaction data (satoshi per byte). The
    * default value is the query result of current network's fee rate.
    */
-  feeRate?: number
+  feeRate?: number;
 }
 ```
 
@@ -355,8 +355,8 @@ Setting tx fee rate manually:
 ```ts
 const tx = await wallet.send(toAddress, amount, {
   // rate is 400 satoshi per byte, or  ~0.004 qtum/KB, as is typical.
-  feeRate: 400,
-})
+  feeRate: 400
+});
 ```
 
 ## async wallet.sendEstimateMaxValue
@@ -364,7 +364,7 @@ const tx = await wallet.send(toAddress, amount, {
 Estimate the maximum value that could be sent from this wallet address.
 
 ```ts
-const maxSend = await wallet.sendEstimateMaxValue(toAddress)
+const maxSend = await wallet.sendEstimateMaxValue(toAddress);
 ```
 
 ## async wallet.generateTx
@@ -391,11 +391,11 @@ public async generateTx(
 Example:
 
 ```ts
-const toAddress = "qZaTYNEimGLuqnBDpP3KvBKsFs3DbCuwnr"
-const amount = 0.15 * 1e8
+const toAddress = "qZaTYNEimGLuqnBDpP3KvBKsFs3DbCuwnr";
+const amount = 0.15 * 1e8;
 
-const rawtx = await wallet.generateTx(toAddress, amount)
-console.log(rawtx)
+const rawtx = await wallet.generateTx(toAddress, amount);
+console.log(rawtx);
 ```
 
 Example output, the raw transaction as hexadecimal string:
@@ -472,16 +472,16 @@ Invoke the `burn()` method, and transfer 5000000 satoshi to the contract.
 - The 5000000 is `msg.value` in contract code.
 
 ```ts
-const contractAddress = "1620cd3c24b29d424932ec30c5925f8c0a00941c"
+const contractAddress = "1620cd3c24b29d424932ec30c5925f8c0a00941c";
 // ABI encoded data for the send-to-method transaction
-const encodedData = "e179b912"
+const encodedData = "e179b912";
 
 // Invoke a contract's method, and transferring 0.05 to it.
 const tx = await wallet.contractSend(contractAddress, encodedData, {
-  amount: 0.05 * 1e8,
-})
+  amount: 0.05 * 1e8
+});
 
-console.log(tx)
+console.log(tx);
 ```
 
 Output:
@@ -500,9 +500,9 @@ const maxContractSend = await wallet.contractSendEstimateMaxValue(
   callDataHex,
   {
     gasLimit: 250000,
-    gasPrice: 40,
-  },
-)
+    gasPrice: 40
+  }
+);
 ```
 
 ## async wallet.generateContractSendTx
@@ -527,18 +527,18 @@ public async generateContractSendTx(
 Example:
 
 ```ts
-const contractAddress = "1620cd3c24b29d424932ec30c5925f8c0a00941c"
-const encodedData = "e179b912"
+const contractAddress = "1620cd3c24b29d424932ec30c5925f8c0a00941c";
+const encodedData = "e179b912";
 
 const rawtx = await wallet.generateContractSendTx(
   contractAddress,
   encodedData,
   {
-    amount: 0.01 * 1e8,
-  },
-)
+    amount: 0.01 * 1e8
+  }
+);
 
-console.log(rawtx)
+console.log(rawtx);
 ```
 
 Example output:
@@ -612,14 +612,14 @@ public async contractCall(
 Example:
 
 ```ts
-const contractAddress = "b10071ee33512ce8a0c06ecbc14a5f585a27a3e2"
-const encodedData = "e179b912"
+const contractAddress = "b10071ee33512ce8a0c06ecbc14a5f585a27a3e2";
+const encodedData = "e179b912";
 
 const result = await wallet.contractCall(contractAddress, encodedData, {
-  amount: 0.01 * 1e8,
-})
+  amount: 0.01 * 1e8
+});
 
-console.log(JSON.stringify(result, null, 2))
+console.log(JSON.stringify(result, null, 2));
 ```
 
 Output:
@@ -672,14 +672,14 @@ public async getTransactions(pageNum?: number): Promise<Insight.IRawTransactions
 Example:
 
 ```ts
-const network = networks.testnet
+const network = networks.testnet;
 
-const insight = network.insight()
+const insight = network.insight();
 
 const info = await insight.getTransactionInfo(
-  "f20914f3d810010c0a74df60abb3fcf0d3ff2669d944ce187f079ec9faec563e",
-)
-console.log(info)
+  "f20914f3d810010c0a74df60abb3fcf0d3ff2669d944ce187f079ec9faec563e"
+);
+console.log(info);
 ```
 
 Example output:
@@ -733,19 +733,19 @@ public toEncryptedPrivateKey(
 Example:
 
 ```ts
-const network = networks.testnet
+const network = networks.testnet;
 const mnemonic =
-  "hold struggle ready lonely august napkin enforce retire pipe where avoid drip"
-const password = "covfefe"
+  "hold struggle ready lonely august napkin enforce retire pipe where avoid drip";
+const password = "covfefe";
 
-const wallet = network.fromMnemonic(mnemonic, password)
+const wallet = network.fromMnemonic(mnemonic, password);
 
-console.log("public address:", wallet.address)
-console.log("private key (WIF):", wallet.toWIF())
+console.log("public address:", wallet.address);
+console.log("private key (WIF):", wallet.toWIF());
 console.log(
   "encrypted bip38 private key is:",
-  wallet.toEncryptedPrivateKey(password),
-)
+  wallet.toEncryptedPrivateKey(password)
+);
 ```
 
 Example output:
@@ -780,17 +780,17 @@ public fromEncryptedPrivateKey(
 Example:
 
 ```ts
-const network = networks.testnet
-const encrypted = "6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM"
-const password = "covfefe"
+const network = networks.testnet;
+const encrypted = "6PYVKJXXQ7eyTgGizw9NxX4nz1u185GqF28NWudxvyWZUh8QyJ9u2AqxWM";
+const password = "covfefe";
 
-const startAt = new Date().getTime()
-const wallet = network.fromEncryptedPrivateKey(encrypted, password)
-const endAt = new Date().getTime()
+const startAt = new Date().getTime();
+const wallet = network.fromEncryptedPrivateKey(encrypted, password);
+const endAt = new Date().getTime();
 
-console.log("public address:", wallet.address)
-console.log("private key (WIF):", wallet.toWIF())
-console.log(`decryption takes ${(endAt - startAt) / 1000} seconds`)
+console.log("public address:", wallet.address);
+console.log("private key (WIF):", wallet.toWIF());
+console.log(`decryption takes ${(endAt - startAt) / 1000} seconds`);
 ```
 
 Example output:
@@ -810,15 +810,15 @@ Example:
 Generate as many child wallets as you need:
 
 ```js
-const childWallet0 = wallet.deriveChildWallet(0)
-const childWallet1 = wallet.deriveChildWallet(1)
+const childWallet0 = wallet.deriveChildWallet(0);
+const childWallet1 = wallet.deriveChildWallet(1);
 ```
 
 Or omit the child wallet index (defaults to 0):
 
 ```js
 // The default child wallet index is 0
-const childWallet = wallet.deriveChildWallet()
+const childWallet = wallet.deriveChildWallet();
 ```
 
 ## scrypt (non-stable API)
@@ -828,16 +828,16 @@ This is an scrypt helper function, which may be removed in the future.
 To use scrypt to hash a secret:
 
 ```js
-import { scrypt } from "qtumjs-wallet"
+import { scrypt } from "qtumjs-wallet";
 
 // by default, the bip38 scrypt parameters are used
 const hash = scrypt("my secret", {
-  progress: (status) => {
-    console.log("status", status)
-  },
-})
+  progress: status => {
+    console.log("status", status);
+  }
+});
 
-console.log(hash)
+console.log(hash);
 ```
 
 The progress callback is invoked every 1000 rounds. And finally the result hash is a hex string.
@@ -856,13 +856,13 @@ status { current: 262000, total: 262144, percent: 99.945068359375 }
 You may also choose to specify your own scrypt parameters:
 
 ```js
-import { scrypt, params } from "qtumjs-wallet"
+import { scrypt, params } from "qtumjs-wallet";
 
 const hash = scrypt("my secret", {
   params: {
     N: 1 << 14,
     r: 8,
-    p: 1,
-  },
-})
+    p: 1
+  }
+});
 ```

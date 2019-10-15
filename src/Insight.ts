@@ -4,9 +4,9 @@ import { INetworkInfo } from "./Network"
 import { NetworkNames } from "./constants"
 
 const INSIGHT_BASEURLS: { [key: string]: string } = {
-  [NetworkNames.MAINNET]: "https://explorer.qtum.org/insight-api",
-  [NetworkNames.TESTNET]: "https://testnet.qtum.org/insight-api",
-  [NetworkNames.REGTEST]: "http://localhost:3001/insight-api",
+  [NetworkNames.MAINNET]: "https://qtum.info/api",
+  [NetworkNames.TESTNET]: "https://testnet.qtum.info/api",
+  [NetworkNames.REGTEST]: "http://localhost:3001/api",
 }
 
 export class Insight {
@@ -38,12 +38,12 @@ export class Insight {
   }
 
   public async listUTXOs(address: string): Promise<Insight.IUTXO[]> {
-    const res = await this.axios.get(`/addr/${address}/utxo`)
+    const res = await this.axios.get(`/address/${address}/utxo`)
     return res.data
   }
 
   public async getInfo(address: string): Promise<Insight.IGetInfo> {
-    const res = await this.axios.get(`/addr/${address}`)
+    const res = await this.axios.get(`/address/${address}`)
     return res.data
   }
 
@@ -62,7 +62,7 @@ export class Insight {
     // FIXME wow, what a weird API design... maybe we should just host the RPC
     // server, with limited API exposed.
     const res = await this.axios.get(
-      `/contracts/${address}/hash/${encodedData}/call`,
+      `/contract/${address}/call?data=${encodedData}`,
     )
 
     return res.data
@@ -137,8 +137,9 @@ export namespace Insight {
 
   export interface IUTXO {
     address: string
-    txid: string
-    vout: number
+    transactionId: string
+    outputIndex: number,
+    blockHeight: number,
 
     /**
      * Public key that controls this UXTO, as hex string.
@@ -146,7 +147,7 @@ export namespace Insight {
     scriptPubKey: string
 
     amount: number
-    satoshis: number
+    value: number
 
     isStake: boolean
     height: number

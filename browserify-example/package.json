@@ -1,0 +1,10 @@
+{
+  "name": "browserify-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "browserify": "^16.5.1",
+    "qtumjs-wallet": "^0.2.1"
+  }
+}

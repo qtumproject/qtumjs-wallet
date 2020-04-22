@@ -272,9 +272,13 @@ export class Wallet {
     // massage UXTO to format accepted by bitcoinjs
     const bitcoinjsUTXOs: IUTXO[] = uxtos.map((uxto) => ({
       ...uxto,
-      pos: uxto.vout,
-      value: uxto.satoshis,
-      hash: uxto.txid,
+      pos: uxto.outputIndex,
+      vout: uxto.outputIndex,
+      height: uxto.blockHeight,
+      value: +uxto.value,
+      amount: +uxto.value,
+      hash: uxto.transactionId,
+      txid: uxto.transactionId,
     }))
 
     return bitcoinjsUTXOs

@@ -2,6 +2,7 @@ import { HDNode, ECPair } from "bitcoinjs-lib"
 import * as bip38 from "bip38"
 import * as bip39 from "bip39"
 import * as wifEncoder from "wif"
+import * as bs58 from "bs58check"
 
 import { Wallet } from "./Wallet"
 import { Insight } from "./Insight"
@@ -150,6 +151,16 @@ export class Network {
 
   public insight(): Insight {
     return Insight.forNetwork(this.info)
+  }
+
+  public hexToBase58(input: string): string {
+    const buf = Buffer.from(input, "hex")
+    return bs58.encode(buf)
+  }
+
+  public base58ToHex(input: string) {
+    const buf = bs58.decode(input)
+    return buf.toString("hex")
   }
 }
 

@@ -1,4 +1,4 @@
-declare module "bs58check.d" {
+declare module "bs58check" {
   type RNG = (nbytes: number) => Buffer
   /**
    * Generate a random mnemonic (uses crypto.randomBytes under the hood),

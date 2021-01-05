@@ -32,7 +32,7 @@
   "dependencies": {
     "@types/bip38": "^2.0.0",
     "@types/secp256k1": "^3.5.0",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bignumber.js": "4.1.0",
     "bip38": "^2.0.2",
     "bip39": "^2.5.0",

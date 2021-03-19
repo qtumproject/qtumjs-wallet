@@ -4,8 +4,8 @@ import { INetworkInfo } from "./Network"
 import { NetworkNames } from "./constants"
 
 const INSIGHT_BASEURLS: { [key: string]: string } = {
-  [NetworkNames.MAINNET]: "https://explorer.qtum.org/insight-api",
-  [NetworkNames.TESTNET]: "https://testnet.qtum.org/insight-api",
+  [NetworkNames.MAINNET]: "https://api.qiswap.com/insight-api",
+  [NetworkNames.TESTNET]: "https://testnet-api.qiswap.com/insight-api",
   [NetworkNames.REGTEST]: "http://localhost:3001/insight-api",
 }
 

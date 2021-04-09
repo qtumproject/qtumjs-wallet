@@ -5,7 +5,7 @@ import { NetworkNames } from "./constants"
 
 const INSIGHT_BASEURLS: { [key: string]: string } = {
   [NetworkNames.MAINNET]: "https://insight.backendq.com/insight-api",
-  [NetworkNames.TESTNET]: "https://testnet.backendq.com/insight-api",
+  [NetworkNames.TESTNET]: "https://testnet.qtum.org/insight-api",
   [NetworkNames.REGTEST]: "http://localhost:3001/insight-api",
 }
 

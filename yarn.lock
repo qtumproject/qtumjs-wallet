@@ -27,9 +27,10 @@
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@types/bigi/-/bigi-1.4.0.tgz#6c651df0a66f39075ae92745d648e2281cb9aeb9"
 
-"@types/bip38@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/bip38/-/bip38-2.0.0.tgz#2c8bed75ac77aefead77580147fe6cac443c133b"
+"@types/bip38@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/bip38/-/bip38-2.0.1.tgz#6fd5181b2a137302d8a59099d19e6feddbbdcb6c"
+  integrity sha512-mZTvxt9Oue3dDV8/sgJWNCsdmrkmhnGVRja3ZFKeMHheKbyS6FgcBep0WlpTP5pK8Z3Y3YILBP4nHnAV7knq0g==
   dependencies:
     "@types/node" "*"
 
@@ -51,6 +52,11 @@
 "@types/node@*":
   version "9.4.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.6.tgz#d8176d864ee48753d053783e4e463aec86b8d82e"
+
+"@types/node@11.11.6":
+  version "11.11.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.11.6.tgz#df929d1bb2eee5afdda598a41930fe50b43eaa6a"
+  integrity sha512-Exw4yUWMBXM3X+8oqzJNRqZSwUAaS4+7NdvHqQuFi/d+synz++xmX3QIf+BFqneW8N31R8Ky+sikfZUXq07ggQ==
 
 "@types/node@^14.14.7":
   version "14.14.7"
@@ -152,9 +158,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.1.0.tgz#30fa40c9e7fe07dbc895678cd287024dea241dd9"
   integrity sha512-1Yj8h9Q+QDF5FzhMs/c9+6UntbD5MkRfRwac8DoEm9ZfUBZ7tZ55YcGVAzEe4bXsdQHEk+s9S5wsOKVdZrw0tQ==
 
-bip38@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/bip38/-/bip38-2.0.2.tgz#6f7762bc90b0bdf63b489ff95349354aecf9baee"
+bip38@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/bip38/-/bip38-3.1.1.tgz#76506a47c8b60a10a679e85f2620003d9549ec0b"
+  integrity sha512-d5AQWuXS95rdrEBnaKeZ9osMkvDR3QDULbAfoE7xRw0W8jfDrza9CsZwf+UhqjV6lbbfaWCrJIu5uObJlfo5Rw==
   dependencies:
     bigi "^1.2.0"
     browserify-aes "^1.0.1"
@@ -162,17 +169,18 @@ bip38@^2.0.2:
     buffer-xor "^1.0.2"
     create-hash "^1.1.1"
     ecurve "^1.0.0"
-    scryptsy "^2.0.0"
+    safe-buffer "~5.1.1"
+    scryptsy "^2.1.0"
 
-bip39@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/bip39/-/bip39-2.5.0.tgz#51cbd5179460504a63ea3c000db3f787ca051235"
+bip39@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/bip39/-/bip39-3.0.3.tgz#4a8b79067d6ed2e74f9199ac994a2ab61b176760"
+  integrity sha512-P0dKrz4g0V0BjXfx7d9QNkJ/Txcz/k+hM9TnjqjUaXtuOfAvxXSw2rJw8DX0e3ZPwnK/IgDxoRqf0bvoVCqbMg==
   dependencies:
+    "@types/node" "11.11.6"
     create-hash "^1.1.0"
     pbkdf2 "^3.0.9"
     randombytes "^2.0.1"
-    safe-buffer "^5.0.1"
-    unorm "^1.3.3"
 
 bip66@^1.1.0:
   version "1.1.5"
@@ -1086,13 +1094,18 @@ safe-buffer@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
 
-safe-buffer@^5.1.2:
+safe-buffer@^5.1.2, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
 
 scryptsy@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/scryptsy/-/scryptsy-2.0.0.tgz#262c36f0231cfa7654e2363fa394cd2dec66f378"
+
+scryptsy@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/scryptsy/-/scryptsy-2.1.0.tgz#8d1e8d0c025b58fdd25b6fa9a0dc905ee8faa790"
+  integrity sha512-1CdSqHQowJBnMAFyPEBRfqag/YP9OF394FV+4YREIJX4ljD7OxvQRDayyoyyCk+senRjSkP6VnUNQmVQqB6g7w==
 
 secp256k1@^4.0.2:
   version "4.0.2"
@@ -1320,10 +1333,6 @@ typescript@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.5.tgz#ae9dddfd1069f1cb5beb3ef3b2170dd7c1332389"
   integrity sha512-ywmr/VrTVCmNTJ6iV2LwIrfG1P+lv6luD8sUJs+2eI9NLGigaN+nUQc13iHqisq7bra9lnmUSYqbJvegraBOPQ==
-
-unorm@^1.3.3:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/unorm/-/unorm-1.4.1.tgz#364200d5f13646ca8bcd44490271335614792300"
 
 util-deprecate@^1.0.1:
   version "1.0.2"

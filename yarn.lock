@@ -1179,9 +1179,10 @@ qtumd-rpc@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/qtumd-rpc/-/qtumd-rpc-0.0.2.tgz#511eebcc48da7fe8074ad61c4c32bb4dc2916f50"
 
-qtumjs-lib@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/qtumjs-lib/-/qtumjs-lib-0.0.6.tgz#d57f76b9fc3c4a1b01ad1986716ff73f86d1ce8d"
+qtumjs-lib@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/qtumjs-lib/-/qtumjs-lib-0.0.8.tgz#3bc19d2651e3d3f6aabc48742ef0e93987402604"
+  integrity sha512-hkt99ePZOmaboKbTnCPGvmA6fb0AvUfaI51jKTy9EAQuYFLfY4uEL/SrzMwpr8wJ2WUK1GNN4T3U/mX1J9mCww==
   dependencies:
     bignumber.js "^4.1.0"
     bitcoinjs-lib "^3.3.2"

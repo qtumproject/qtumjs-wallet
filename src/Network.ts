@@ -70,7 +70,7 @@ export class Network {
    */
   public fromMnemonic(mnemonic: string, password?: string): Wallet {
     // if (bip39.validateMnemonic(mnemonic) == false) return false
-    const seedHex = bip39.mnemonicToSeedHex(mnemonic, password)
+    const seedHex = bip39.mnemonicToSeedSync(mnemonic, password).toString('hex')
     const hdNode = HDNode.fromSeedHex(seedHex, this.info)
     const account = hdNode
       .deriveHardened(88)
@@ -112,7 +112,7 @@ export class Network {
    * @param network
    */
   public fromMobile(mnemonic: string): Wallet[] {
-    const seedHex = bip39.mnemonicToSeedHex(mnemonic)
+    const seedHex = bip39.mnemonicToSeedSync(mnemonic).toString('hex')
     const hdNode = HDNode.fromSeedHex(seedHex, this.info)
     const account = hdNode.deriveHardened(88).deriveHardened(0)
     const wallets: Wallet[] = []

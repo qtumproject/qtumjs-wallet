@@ -9,7 +9,6 @@ import { Insight } from "./Insight"
 import { validatePrivateKey } from "./index"
 import { IScryptParams, params } from "./scrypt"
 import { NetworkNames } from "./constants"
-export { NetworkNames } from "./constants"
 
 export interface INetworkInfo {
   name: string

@@ -24,7 +24,7 @@ import { params, IScryptParams } from "./scrypt"
  *
  * This value will be used for testnet.
  */
-const defaultTxFeePerByte = Math.ceil((0.004 * 1e8) / 1000)
+const defaultTxFeePerByte = Math.ceil((0.005 * 1e8) / 1000)
 
 export class Wallet {
   public address: string

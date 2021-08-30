@@ -275,7 +275,7 @@ export class Wallet {
       pos: uxto.vout,
       value: uxto.satoshis,
       hash: uxto.txid,
-    })).filter((utxo) => utxo.confirmations >= 500 || !utxo.isStake)
+    })).filter((utxo) => utxo.confirmations >= 2000 || !utxo.isStake)
 
     return bitcoinjsUTXOs
   }

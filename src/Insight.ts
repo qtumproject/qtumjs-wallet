@@ -98,7 +98,7 @@ export class Insight {
       return feeRate
     }
 
-    return Math.ceil(feeRate / 1024)
+    return Math.ceil(feeRate / 1000)
   }
 
   /**

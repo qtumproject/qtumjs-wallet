@@ -388,7 +388,7 @@ export function buildSendToContractTransaction(
 }
 
 // The prevalent network fee is 0.004 per KB. If set to 100 times of norm, assume error.
-const MAX_FEE_RATE = Math.ceil((0.004 * 100 * 1e8) / 1024)
+const MAX_FEE_RATE = Math.ceil((0.004 * 100 * 1e8) / 1000)
 
 function checkFeeRate(feeRate: number) {
   if (feeRate > MAX_FEE_RATE) {

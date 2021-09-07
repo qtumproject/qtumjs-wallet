@@ -466,9 +466,9 @@ public async contractSend(
 
 Example:
 
-Invoke the `burn()` method, and transfer 5000000 satoshi to the contract.
+Invoke the `burnbabyburn()` method, and transfer 5000000 satoshi to the contract.
 
-- The `burn()` method call ABI encodes to `e179b912`
+- The `burnbabyburn()` method call ABI encodes to `e179b912`
 - The 5000000 is `msg.value` in contract code.
 
 ```ts
